@@ -1,2 +1,3 @@
 # Libary_DBI_4chif
-Gruppenarbeit von Dürk, Habibovic, Kern und Wunder 
+Gruppenarbeit von Dürk, Habibovic, Kern, Lasinger und Wunder 
+aka die Besten
