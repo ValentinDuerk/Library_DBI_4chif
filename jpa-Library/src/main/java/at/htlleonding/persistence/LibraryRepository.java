@@ -1,6 +1,8 @@
 package at.htlleonding.persistence;
 ///home/peter/src/dbi4/quarkus-hibernate-cmdline
 
+import at.htlleonding.persistence.MediaTypes.Book;
+
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
