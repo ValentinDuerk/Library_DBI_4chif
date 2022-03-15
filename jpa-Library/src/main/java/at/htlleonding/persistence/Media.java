@@ -26,6 +26,9 @@ public class Media {
     @Column
     private Date publicationDate;
 
+    @OneToMany
+    private Set<Publication> publication = new HashSet<>();
+
     public Media() {
     }
 
