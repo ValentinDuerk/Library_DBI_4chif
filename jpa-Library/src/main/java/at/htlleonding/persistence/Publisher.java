@@ -22,9 +22,8 @@ public class Publisher {
 
     }
 
-    public Publisher(String name, Set<Publication> publications) {
+    public Publisher(String name) {
         this.name = name;
-        this.publications = publications;
     }
 
     public Integer getId() {

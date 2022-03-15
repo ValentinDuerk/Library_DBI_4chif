@@ -22,10 +22,9 @@ public class Language {
 
     }
 
-    public Language(Integer id, String keyWord, Set<Publication> publications) {
+    public Language(Integer id, String keyWord) {
         this.id = id;
         this.keyWord = keyWord;
-        this.publications = publications;
     }
 
     public Integer getId() {
