@@ -20,10 +20,6 @@ public class Author {
     @Column(nullable = false)
     private LocalDate dateBirth;
 
-    @Column
-    private LocalDate dateDeath;
-
-
     public String getFirstName() {
         return firstName;
     }
@@ -57,14 +53,6 @@ public class Author {
 
     public void setDateBirth(LocalDate dateBirth) {
         this.dateBirth = dateBirth;
-    }
-
-    public LocalDate getDateDeath() {
-        return dateDeath;
-    }
-
-    public void setDateDeath(LocalDate dateDeath) {
-        this.dateDeath = dateDeath;
     }
 
     public String getFullName() {
