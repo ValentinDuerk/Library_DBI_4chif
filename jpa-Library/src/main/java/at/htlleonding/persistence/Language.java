@@ -2,7 +2,9 @@ package at.htlleonding.persistence;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Language {
@@ -14,13 +16,13 @@ public class Language {
     private String keyWord;
 
     @OneToMany(mappedBy = "language")
-    private List<Publication> publications = new ArrayList<Publication>();
+    private Set<Publication> publications = new HashSet<>();
 
     public Language() {
 
     }
 
-    public Language(Integer id, String keyWord, List<Publication> publications) {
+    public Language(Integer id, String keyWord, Set<Publication> publications) {
         this.id = id;
         this.keyWord = keyWord;
         this.publications = publications;
@@ -38,11 +40,7 @@ public class Language {
         this.keyWord = keyWord;
     }
 
-    public List<Publication> getPublications() {
+    public Set<Publication> getPublications() {
         return publications;
-    }
-
-    public void setPublications(List<Publication> publications) {
-        this.publications = publications;
     }
 }
