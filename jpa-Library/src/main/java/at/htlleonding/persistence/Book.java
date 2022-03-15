@@ -14,13 +14,6 @@ public class Book {
     @Column(length = 50, nullable = false)
     private String title;
 
-    public Set<BookAuthor> getAssocAuthors() {
-        return myAuthors;
-    }
-
-    @OneToMany(mappedBy = "book")
-    private Set<BookAuthor> myAuthors = new HashSet<>();
-
     @ManyToMany()
     private Set<Topic> topics = new HashSet<>();
 
@@ -44,14 +37,6 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public Set<Author> getAuthors() {
-        var result = new HashSet<Author>();
-        for(BookAuthor ba : myAuthors) {
-            result.add(ba.getAuthor());
-        }
-        return result;
     }
 
     public Set<Topic> getTopics() {

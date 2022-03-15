@@ -15,40 +15,4 @@ import java.time.LocalDate;
 public class LibraryRepositoryTest {
     @Inject
     LibraryRepository target;
-
-    private void createBookAndAuthor() {
-        var a1 = new Author();
-        a1.setDateDeath(LocalDate.of(1980, 01, 01));
-        a1.setDateBirth(LocalDate.of(1940, 01, 01));
-        a1.setFirstName("George");
-        a1.setLastName("Orwell");
-
-        target.add(a1);
-
-        var b1 = new Book();
-        b1.setTitle("1984");
-        target.add(b1, a1);
-
-        var b2 = new Book();
-        b2.setTitle("Animal Farm");
-        target.add(b2, a1);
-    }
-
-    @TestTransaction
-    @Test
-    public void callCreateBookAndAuthor_getByLastName_Orwell_getOrwellObject() {
-        createBookAndAuthor();
-        var target = this.target.getAuthorByLastName("Orwell");
-        Assertions.assertNotNull(target);
-        Assertions.assertEquals("George", target.getFirstName());
-    }
-
-    @TestTransaction
-    @Test
-    public void callCreateBookAndAuthor_getByLastName_Doe_getNULL() {
-        createBookAndAuthor();
-        var target = this.target.getAuthorByLastName("Doe");
-        Assertions.assertNull(target);
-    }
-
 }

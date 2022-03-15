@@ -31,29 +31,6 @@ public class LibraryRepository {
     public void add(Book b) { entityManager.persist(b);  }
 
     @Transactional
-    public void add(Book b, Author a) {
-        add(b, a, true);
-    }
-
-    @Transactional
-    public void add(Book b, Author a, boolean isPrimaryAuthor) {
-        if(b.getId() == null) {
-            add(b);
-        }
-        if(a.getId() == null) {
-            add(a);
-        }
-
-        var assoc = new BookAuthor(b, a, isPrimaryAuthor);
-        a.getAssocBooks().add(assoc);
-        b.getAssocAuthors().add(assoc);
-
-        entityManager.persist(assoc);
-        entityManager.persist(a);
-        entityManager.persist(b);
-    }
-
-    @Transactional
     public void add(Topic t) {
         entityManager.persist(t);
     }

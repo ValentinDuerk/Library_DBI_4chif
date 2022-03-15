@@ -23,9 +23,6 @@ public class Author {
     @Column
     private LocalDate dateDeath;
 
-    @OneToMany(mappedBy = "author")
-    private Set<BookAuthor> myBooks = new HashSet<>();
-
 
     public String getFirstName() {
         return firstName;
@@ -76,8 +73,4 @@ public class Author {
 
     @Override
     public String toString() { return id + " " + getFullName(); }
-
-    public Set<BookAuthor> getAssocBooks() {
-        return myBooks;
-    }
 }
