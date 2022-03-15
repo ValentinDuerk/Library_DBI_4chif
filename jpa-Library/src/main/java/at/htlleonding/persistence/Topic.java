@@ -12,7 +12,7 @@ public class Topic {
     private Integer id;
 
     @ManyToMany()
-    private Set<Book> booksOfTopic = new HashSet<>();
+    private Set<Media> mediaOfTopic = new HashSet<>();
 
     @Column
     private String keyword;
@@ -34,6 +34,5 @@ public class Topic {
         this.keyword = keyword;
     }
 
-    public Set<Book> getBooks() { return booksOfTopic;
-    }
+    public Set<Media> getMedia() { return mediaOfTopic; }
 }

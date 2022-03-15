@@ -14,7 +14,7 @@ public class Genre {
     private String keyword;
 
     @OneToMany
-    private Set<Book> booksOfGenre = new HashSet<>();
+    private Set<Media> mediaOfGenre = new HashSet<>();
 
     public Genre(String keyword) {
         this.keyword = keyword;
@@ -34,7 +34,7 @@ public class Genre {
         this.keyword = keyword;
     }
 
-    public Set<Book> getBooks() {
-        return booksOfGenre;
+    public Set<Media> getMedia() {
+        return mediaOfGenre;
     }
 }
