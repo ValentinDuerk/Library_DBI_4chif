@@ -2,7 +2,9 @@ package at.htlleonding.persistence;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Publisher {
@@ -14,13 +16,13 @@ public class Publisher {
     private String name;
 
     @OneToMany(mappedBy = "publisher")
-    private List<Publication> publications = new ArrayList<Publication>();
+    private Set<Publication> publications = new HashSet<>();
 
     public Publisher() {
 
     }
 
-    public Publisher(String name, List<Publication> publications) {
+    public Publisher(String name, Set<Publication> publications) {
         this.name = name;
         this.publications = publications;
     }
@@ -37,11 +39,7 @@ public class Publisher {
         this.name = name;
     }
 
-    public List<Publication> getPublications() {
+    public Set<Publication> getPublications() {
         return publications;
-    }
-
-    public void setPublications(List<Publication> publications) {
-        this.publications = publications;
     }
 }
