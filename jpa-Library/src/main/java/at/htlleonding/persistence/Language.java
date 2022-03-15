@@ -22,8 +22,7 @@ public class Language {
 
     }
 
-    public Language(Integer id, String keyWord) {
-        this.id = id;
+    public Language(String keyWord) {
         this.keyWord = keyWord;
     }
 
