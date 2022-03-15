@@ -1,5 +1,7 @@
 package at.htlleonding.persistence;
 
+import at.htlleonding.persistence.MediaTypes.Book;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
