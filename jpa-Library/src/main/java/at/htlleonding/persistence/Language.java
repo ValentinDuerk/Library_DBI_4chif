@@ -11,7 +11,7 @@ public class Language {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String keyWord;
 
     @OneToMany(mappedBy = "language")
     private List<Publication> publications = new ArrayList<Publication>();
@@ -20,9 +20,9 @@ public class Language {
 
     }
 
-    public Language(Integer id, String name, List<Publication> publications) {
+    public Language(Integer id, String keyWord, List<Publication> publications) {
         this.id = id;
-        this.name = name;
+        this.keyWord = keyWord;
         this.publications = publications;
     }
 
@@ -30,12 +30,12 @@ public class Language {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getKeyWord() {
+        return keyWord;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
     }
 
     public List<Publication> getPublications() {
