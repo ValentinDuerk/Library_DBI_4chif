@@ -225,20 +225,20 @@ public class LibraryRepository {
     }
 
 
-    @Transactional
-    public Book getBook(String authorLastName, String title) {
-        try {
-            return entityManager
-                    .createQuery("select ba.book from BookAuthor ba where ba.book.title = :title and ba.author.lastName = :authorLastName", Book.class)
-                    .setParameter("title", title)
-                    .setParameter("authorLastName", authorLastName)
-                    .getSingleResult();
-        }
-        catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-    }
+//    @Transactional
+//    public Book getBook(String authorLastName, String title) {
+//        try {
+//            return entityManager
+//                    .createQuery("select ba.book from BookAuthor ba where ba.book.title = :title and ba.author.lastName = :authorLastName", Book.class)
+//                    .setParameter("title", title)
+//                    .setParameter("authorLastName", authorLastName)
+//                    .getSingleResult();
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
 
     @Transactional
     public Publication getPublication(String title, String language) {
@@ -311,62 +311,62 @@ public class LibraryRepository {
         }
     }
 
-    @Transactional
-    public List<Book> getAllBooks(boolean includeAuthors) {
-        try {
-            var query = includeAuthors ?
-                    entityManager.createQuery("select distinct b from Book b join fetch b.myAuthors", Book.class)
-                    :
-                    entityManager.createQuery("select b from Book b", Book.class);
-            return query
-                    .getResultList();
-        }
-        catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-    }
+//    @Transactional
+//    public List<Book> getAllBooks(boolean includeAuthors) {
+//        try {
+//            var query = includeAuthors ?
+//                    entityManager.createQuery("select distinct b from Book b join fetch b.myAuthors", Book.class)
+//                    :
+//                    entityManager.createQuery("select b from Book b", Book.class);
+//            return query
+//                    .getResultList();
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
 
-    @Transactional
-    public List<Book> getBooksOfTopic(String keyword) {
-        try {
-            var query = entityManager
-                    .createQuery(
-                            "select distinct b from Book b " +
-                                    "join b.myAuthors " +
-                                    "join b.topics " +
-                                    "where " +
-                                    "(select count(t.keyword) from b.topics t where t.keyword = :keyword) > 0 ", Book.class);
+//    @Transactional
+//    public List<Book> getBooksOfTopic(String keyword) {
+//        try {
+//            var query = entityManager
+//                    .createQuery(
+//                            "select distinct b from Book b " +
+//                                    "join b.myAuthors " +
+//                                    "join b.topics " +
+//                                    "where " +
+//                                    "(select count(t.keyword) from b.topics t where t.keyword = :keyword) > 0 ", Book.class);
+//
+//            return query
+//                    .setParameter("keyword", keyword)
+//                    .getResultList();
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
 
-            return query
-                    .setParameter("keyword", keyword)
-                    .getResultList();
-        }
-        catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-    }
-
-    @Transactional
-    public List<Book> getBooksOfGenre(String keyword) {
-        try {
-            var query = entityManager
-                    .createQuery(
-                            "select distinct b from Book b " +
-                                    "join b.myAuthors " +
-                                    "join b.genre " +
-                                    "where " +
-                                    "b.genre.keyword = :keyword", Book.class);
-            return query
-                    .setParameter("keyword", keyword)
-                    .getResultList();
-        }
-        catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-    }
+//    @Transactional
+//    public List<Book> getBooksOfGenre(String keyword) {
+//        try {
+//            var query = entityManager
+//                    .createQuery(
+//                            "select distinct b from Book b " +
+//                                    "join b.myAuthors " +
+//                                    "join b.genre " +
+//                                    "where " +
+//                                    "b.genre.keyword = :keyword", Book.class);
+//            return query
+//                    .setParameter("keyword", keyword)
+//                    .getResultList();
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
 
 //    @Transactional
 //    public List<Book> getInventory() {
