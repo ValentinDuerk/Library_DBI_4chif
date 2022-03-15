@@ -28,26 +28,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public void add(Book b) { entityManager.persist(b);  }
-
-    @Transactional
     public void add(Topic t) {
-        entityManager.persist(t);
-    }
-
-    @Transactional
-    public void add(Book b, Topic t) {
-        if(b.getId() == null) {
-            add(b);
-        }
-        if(t.getId() == null) {
-            add(t);
-        }
-
-        b.getTopics().add(t);
-        t.getBooks().add(b);
-
-        entityManager.persist(b);
         entityManager.persist(t);
     }
 
@@ -57,19 +38,144 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public void add(Book b, Genre g) {
-        if(b.getId() == null) {
-            add(b);
-        }
-        if(g.getId() == null) {
-            add(g);
-        }
+    public void add(Language l) {
+        entityManager.persist(l);
+    }
 
-        b.setGenre(g);
-        g.getBooks().add(b);
+    @Transactional
+    public void add(Publisher p) {
+        entityManager.persist(p);
+    }
 
-        entityManager.persist(b);
-        entityManager.persist(g);
+    @Transactional
+    public void add(Publication p) {
+        entityManager.persist(p);
+    }
+
+    @Transactional
+    public void add(Media m) {
+        entityManager.persist(m);
+    }
+
+
+    @Transactional
+    public void add(Media m, Genre g) {
+//        if(m.getId() == null) {
+//            add(m);
+//        }
+//        if(g.getId() == null) {
+//            add(g);
+//        }
+//
+//        m.setGenre(g);
+//        g.getMedias().add(m);
+//
+//        entityManager.persist(m);
+//        entityManager.persist(g);
+    }
+
+    @Transactional
+    public void add(Media m, Topic t) {
+//        if(m.getId() == null) {
+//            add(m);
+//        }
+//        if(t.getId() == null) {
+//            add(t);
+//        }
+//
+//        m.getTopics().add(t);
+//        t.getMedias().add(m);
+//
+//        entityManager.persist(m);
+//        entityManager.persist(t);
+    }
+
+    @Transactional
+    public void add(Media m, Author a) {
+//        if(m.getId() == null) {
+//            add(m);
+//        }
+//        if(a.getId() == null) {
+//            add(a);
+//        }
+//
+//        m.getAuthors().add(a);
+//        a.getMedias().add(m);
+//
+//        entityManager.persist(m);
+//        entityManager.persist(a);
+    }
+
+    @Transactional
+    public void add(Publication p, Media m) {
+//        if(p.getId() == null) {
+//            add(p);
+//        }
+//        if(m.getId() == null) {
+//            add(m);
+//        }
+//
+//        p.setMedia(m);
+//        m.getPublications().add(p);
+//
+//        entityManager.persist(p);
+//        entityManager.persist(m);
+    }
+
+    @Transactional
+    public void add(Publication pc, Publisher ps) {
+//        if(pc.getId() == null) {
+//            add(pc);
+//        }
+//        if(ps.getId() == null) {
+//            add(ps);
+//        }
+//
+//        pc.setPublisher(ps);
+//        ps.getPublications().add(pc);
+//
+//        entityManager.persist(pc);
+//        entityManager.persist(ps);
+    }
+
+    @Transactional
+    public void add(Publication p, Language l) {
+//        if(p.getId() == null) {
+//            add(p);
+//        }
+//        if(l.getId() == null) {
+//            add(l);
+//        }
+//
+//        p.setLanguage(l);
+//        l.getPublications().add(p);
+//
+//        entityManager.persist(p);
+//        entityManager.persist(l);
+    }
+
+    @Transactional
+    public List<Media> getAllMedias() {
+        return
+                entityManager
+                        .createQuery("select m from Media m", Media.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Topic> getAllTopics() {
+        return
+                entityManager
+                        .createQuery("select t from Topic t", Topic.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Genre> getAllGenres() {
+        return
+                entityManager
+                        .createQuery("select g from Genre g", Genre.class)
+                        .getResultList();
     }
 
     @Transactional
@@ -77,6 +183,30 @@ public class LibraryRepository {
         return
                 entityManager
                         .createQuery("select a from Author a", Author.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Publication> getAllPublications() {
+        return
+                entityManager
+                        .createQuery("select p from Publication p", Publication.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Publisher> getAllPublisher() {
+        return
+                entityManager
+                        .createQuery("select p from Publisher p", Publisher.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Language> getAllLanguages() {
+        return
+                entityManager
+                        .createQuery("select l from Language l", Language.class)
                         .getResultList();
     }
 
@@ -111,6 +241,21 @@ public class LibraryRepository {
     }
 
     @Transactional
+    public Publication getPublication(String title, String language) {
+        try {
+            return entityManager
+                    .createQuery("select p from Publication p join Language l on l.language = :language where p.title = :title and l.id = p.languageid", Publication.class)
+                    .setParameter("title", title)
+                    .setParameter("authorLastName", language)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
     public Genre getGenre(String keyword) {
         try {
             return entityManager
@@ -129,6 +274,34 @@ public class LibraryRepository {
         try {
             return entityManager
                     .createQuery("select t from Topic t where t.keyword = :keyword", Topic.class)
+                    .setParameter("keyword", keyword)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public Language getLanguage(String keyword) {
+        try {
+            return entityManager
+                    .createQuery("select l from Language l where l.keyword = :keyword", Language.class)
+                    .setParameter("keyword", keyword)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public Publisher getPublisher(String keyword) {
+        try {
+            return entityManager
+                    .createQuery("select p from Publisher p where p.keyword = :keyword", Publisher.class)
                     .setParameter("keyword", keyword)
                     .getSingleResult();
         }
@@ -195,25 +368,25 @@ public class LibraryRepository {
         }
     }
 
-    @Transactional
-    public List<Book> getInventory() {
-        try {
-            var query = entityManager
-                    .createQuery(
-                            "select distinct (b) from Book b " +
-                                    "join BookAuthor ba on ba.book.id = b.id " +
-                                    "join fetch b.topics " +
-                                    "join fetch b.genre " +
-                                    "join fetch b.myAuthors " +
-                                    "where ba.isPrimaryAuthor = true "
-                            , Book.class);
-
-            return query
-                    .getResultList();
-        }
-        catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-    }
+//    @Transactional
+//    public List<Book> getInventory() {
+//        try {
+//            var query = entityManager
+//                    .createQuery(
+//                            "select distinct (b) from Book b " +
+//                                    "join BookAuthor ba on ba.book.id = b.id " +
+//                                    "join fetch b.topics " +
+//                                    "join fetch b.genre " +
+//                                    "join fetch b.myAuthors " +
+//                                    "where ba.isPrimaryAuthor = true "
+//                            , Book.class);
+//
+//            return query
+//                    .getResultList();
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
 }
