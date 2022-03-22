@@ -4,3 +4,4 @@ jpa-Library/target/jpa-Library-dev.jar
 *.lst
 jpa-Library/.idea/jpa-Library.iml
 jpa-Library/.idea/misc.xml
+*.class
