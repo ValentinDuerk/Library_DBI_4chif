@@ -1,0 +1,13 @@
+at\htlleonding\persistence\Media_Topic.class
+at\htlleonding\persistence\LibraryRepository.class
+at\htlleonding\logic\LibraryLogic.class
+at\htlleonding\persistence\Publisher.class
+at\htlleonding\persistence\Genre.class
+at\htlleonding\persistence\Book.class
+at\htlleonding\persistence\Publication.class
+at\htlleonding\persistence\Media_Author.class
+at\htlleonding\persistence\Language.class
+at\htlleonding\persistence\Author.class
+at\htlleonding\persistence\Topic.class
+at\htlleonding\QuarkusCmdlineApp.class
+at\htlleonding\persistence\Media.class
