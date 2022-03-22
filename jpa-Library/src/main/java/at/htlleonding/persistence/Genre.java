@@ -13,7 +13,7 @@ public class Genre {
     @Column
     private String keyword;
 
-    @OneToMany
+    @OneToMany(mappedBy = "genre")
     private Set<Media> mediaOfGenre = new HashSet<>();
 
     public Genre(String keyword) {
