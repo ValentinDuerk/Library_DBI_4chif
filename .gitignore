@@ -1,2 +1,5 @@
 
 jpa-Library/target/jpa-Library-dev.jar
+*.dat
+*.lst
+jpa-Library/.idea/jpa-Library.iml
