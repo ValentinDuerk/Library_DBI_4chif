@@ -5,8 +5,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "MEDIA_TYPE")
 @Entity
 public class Media {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,8 +26,8 @@ public class Media {
     @Column
     private Date publicationDate;
 
-    @OneToMany
-    private Set<Publication> publication = new HashSet<>();
+    @OneToMany(mappedBy = "media")
+    private Set<Publication> publications = new HashSet<>();
 
     public Media() {
     }
