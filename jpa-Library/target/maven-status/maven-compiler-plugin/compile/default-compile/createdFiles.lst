@@ -1,0 +1,16 @@
+at\htlleonding\persistence\MediaTypes\EBook.class
+at\htlleonding\persistence\MediaTypes\Magazine.class
+at\htlleonding\persistence\LibraryRepository.class
+at\htlleonding\logic\LibraryLogic.class
+at\htlleonding\persistence\Publisher.class
+at\htlleonding\persistence\Genre.class
+at\htlleonding\persistence\Publication.class
+at\htlleonding\persistence\MediaTypes\ReferenceBook.class
+at\htlleonding\persistence\Language.class
+at\htlleonding\persistence\Author.class
+at\htlleonding\persistence\Topic.class
+at\htlleonding\persistence\MediaTypes\Book.class
+at\htlleonding\QuarkusCmdlineApp.class
+at\htlleonding\persistence\MediaTypes\Newspaper.class
+at\htlleonding\persistence\Media.class
+at\htlleonding\persistence\MediaTypes\AudioBook.class
