@@ -1,6 +1,8 @@
 package at.htlleonding.persistence;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Publication {
@@ -26,15 +28,15 @@ public class Publication {
     @Column(nullable = false)
     private boolean isTranslation;
 
+    @OneToMany(mappedBy = "publication")
+    private Set<Specimen> specimen = new HashSet<Specimen>();
+
     public Publication() {
 
     }
 
-    public Publication(String title, Publisher publisher, Language language, Media media, boolean isTranslation) {
+    public Publication(String title, boolean isTranslation) {
         this.title = title;
-        this.publisher = publisher;
-        this.language = language;
-        this.media = media;
         this.isTranslation = isTranslation;
     }
 

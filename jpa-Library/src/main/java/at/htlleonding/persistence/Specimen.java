@@ -9,8 +9,15 @@ public class Specimen {
     private Integer id;
 
     @Column
-    private String Date;
+    private String purchaseDate;
 
     @ManyToOne
+    @JoinColumn(name = "bookShelfId")
     private BookShelf bookShelf;
+
+    @ManyToOne
+    @JoinColumn(name = "publicationId")
+    private Publication publication;
+
+    // specimen state enum
 }
