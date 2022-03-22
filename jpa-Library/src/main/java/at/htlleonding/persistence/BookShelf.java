@@ -13,6 +13,6 @@ public class BookShelf {
     @ManyToOne
     private Room room;
 
-    @OneToMany(mappedBy = "bookshelf")
+    @OneToMany(mappedBy = "bookShelf")
     private Set<Specimen> specimen = new HashSet<Specimen>();
 }

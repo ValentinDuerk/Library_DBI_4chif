@@ -10,4 +10,7 @@ public class Specimen {
 
     @Column
     private String Date;
+
+    @ManyToOne
+    private BookShelf bookShelf;
 }
