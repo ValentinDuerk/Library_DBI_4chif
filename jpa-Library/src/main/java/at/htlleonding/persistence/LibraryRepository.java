@@ -30,41 +30,43 @@ public class LibraryRepository {
         entityManager.clear();
     }
 
-    @Transactional
-    public void add(Author a) {
-        entityManager.persist(a);
-    }
+//    @Transactional
+//    public void add(Author a) {
+//        entityManager.persist(a);
+//    }
+//
+//    @Transactional
+//    public void add(Topic t) {
+//        entityManager.persist(t);
+//    }
+//
+//    @Transactional
+//    public void add(Genre g) {
+//        entityManager.persist(g);
+//    }
+//
+//    @Transactional
+//    public void add(Language l) {
+//        entityManager.persist(l);
+//    }
+//
+//    @Transactional
+//    public void add(Publisher p) {
+//        entityManager.persist(p);
+//    }
+//
+//    @Transactional
+//    public void add(Publication p) {
+//        entityManager.persist(p);
+//    }
+//
+//    @Transactional
+//    public void add(Media m) {
+//        entityManager.persist(m);
+//    }
 
     @Transactional
-    public void add(Topic t) {
-        entityManager.persist(t);
-    }
-
-    @Transactional
-    public void add(Genre g) {
-        entityManager.persist(g);
-    }
-
-    @Transactional
-    public void add(Language l) {
-        entityManager.persist(l);
-    }
-
-    @Transactional
-    public void add(Publisher p) {
-        entityManager.persist(p);
-    }
-
-    @Transactional
-    public void add(Publication p) {
-        entityManager.persist(p);
-    }
-
-    @Transactional
-    public void add(Media m) {
-        entityManager.persist(m);
-    }
-
+    public <E> void add(E e) {entityManager.persist(e);}
 
     @Transactional
     public void add(Media m, Genre g) {
@@ -100,18 +102,18 @@ public class LibraryRepository {
 
     @Transactional
     public void add(Media m, Author a) {
-//        if(m.getId() == null) {
-//            add(m);
-//        }
-//        if(a.getId() == null) {
-//            add(a);
-//        }
-//
-//        m.getAuthors().add(a);
-//        a.getMedias().add(m);
-//
-//        entityManager.persist(m);
-//        entityManager.persist(a);
+        if(m.getId() == null) {
+            add(m);
+        }
+        if(a.getId() == null) {
+            add(a);
+        }
+
+        m.getAuthors().add(a);
+        a.getMedia().add(m);
+
+        entityManager.persist(m);
+        entityManager.persist(a);
     }
 
     @Transactional
@@ -160,6 +162,54 @@ public class LibraryRepository {
 
         entityManager.persist(p);
         entityManager.persist(l);
+    }
+
+    @Transactional
+    public void add(Room r, BookShelf b) {
+        if(r.getId() == null) {
+            add(r);
+        }
+        if(b.getId() == null) {
+            add(b);
+        }
+
+        b.setRoom(r);
+        r.getBookShelves().add(b);
+
+        entityManager.persist(r);
+        entityManager.persist(b);
+    }
+
+    @Transactional
+    public void add(Specimen s, BookShelf b) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(b.getId() == null) {
+            add(b);
+        }
+
+        s.setBookShelf(b);
+        b.getSpecimen().add(s);
+
+        entityManager.persist(s);
+        entityManager.persist(b);
+    }
+
+    @Transactional
+    public void add(Specimen s, Publication p) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(p.getId() == null) {
+            add(p);
+        }
+
+        s.setPublication(p);
+        p.getSpecimen().add(s);
+
+        entityManager.persist(s);
+        entityManager.persist(p);
     }
 
     @Transactional
@@ -217,6 +267,31 @@ public class LibraryRepository {
                         .createQuery("select l from Language l", Language.class)
                         .getResultList();
     }
+
+    @Transactional
+    public List<Room> getAllRooms() {
+        return
+                entityManager
+                        .createQuery("select e from Room e", Room.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<BookShelf> getAllBookShelves() {
+        return
+                entityManager
+                        .createQuery("select b from BookShelf b", BookShelf.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Specimen> getAllSpecimen() {
+        return
+                entityManager
+                        .createQuery("select s from Specimen s", Specimen.class)
+                        .getResultList();
+    }
+
 
     @Transactional
     public Author getAuthorByLastName(String lastName) {
@@ -319,6 +394,49 @@ public class LibraryRepository {
         }
     }
 
+    @Transactional
+    public Room getRoom(int number, int floor) {
+        try {
+            return entityManager
+                    .createQuery("select r from Room r where r.number = ?1 and r.floor = ?2", Room.class)
+                    .setParameter(1, number)
+                    .setParameter(2, floor)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<BookShelf> getBookShelvesFromRoom(int roomId) {
+        try {
+            return entityManager
+                    .createQuery("select b from BookShelf b where b.room.id = ?1", BookShelf.class)
+                    .setParameter(1, roomId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<Specimen> getSpecimensByPublication(int publicationId) {
+        try {
+            return entityManager
+                    .createQuery("select s from Specimen s where s.publication.id = ?1", Specimen.class)
+                    .setParameter(1, publicationId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
 //    @Transactional
 //    public List<Book> getAllBooks(boolean includeAuthors) {
 //        try {
@@ -368,28 +486,6 @@ public class LibraryRepository {
 //                                    "b.genre.keyword = :keyword", Book.class);
 //            return query
 //                    .setParameter("keyword", keyword)
-//                    .getResultList();
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//            return null;
-//        }
-//    }
-
-//    @Transactional
-//    public List<Book> getInventory() {
-//        try {
-//            var query = entityManager
-//                    .createQuery(
-//                            "select distinct (b) from Book b " +
-//                                    "join BookAuthor ba on ba.book.id = b.id " +
-//                                    "join fetch b.topics " +
-//                                    "join fetch b.genre " +
-//                                    "join fetch b.myAuthors " +
-//                                    "where ba.isPrimaryAuthor = true "
-//                            , Book.class);
-//
-//            return query
 //                    .getResultList();
 //        }
 //        catch (Exception e) {

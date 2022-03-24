@@ -1,5 +1,8 @@
 package at.htlleonding.persistence;
 
+import at.htlleonding.persistence.MediaTypes.Book;
+import at.htlleonding.persistence.MediaTypes.EBook;
+import at.htlleonding.persistence.MediaTypes.Magazine;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
@@ -35,6 +38,19 @@ public class LibraryRepositoryTest {
         target.add(topic4);
         target.add(topic5);
 
+        var magazine = new Magazine();
+        target.add(magazine, author1);
+        target.add(magazine, genre1);
+        target.add(magazine, topic1);
+        target.add(magazine, topic2);
+        target.add(magazine, topic3);
+
+        var book = new Book();
+        target.add(book, author2);
+        target.add(book, genre2);
+        target.add(book, topic4);
+        target.add(book, topic5);
+
         var language1 = new Language("Deutsch");
         var language2 = new Language("Englisch");
         target.add(language1);
@@ -45,10 +61,60 @@ public class LibraryRepositoryTest {
         target.add(publisher1);
         target.add(publisher2);
 
-        var publication1 = new Publication("1990", false);
+        var publication1 = new Publication("Die Welt der Teilchen", false);
         var publication2 = new Publication("Das Leben von Johann Johnson", false);
         var publication3 = new Publication("The Life of Johann Johnson", true);
+
+        target.add(publication1, magazine);
         target.add(publication1, language1);
+        target.add(publication1, publisher1);
+
+        target.add(publication2, book);
+        target.add(publication2, language1);
+        target.add(publication2, publisher1);
+
+        target.add(publication3, book);
+        target.add(publication3, language2);
+        target.add(publication3, publisher2);
+
+
+        var room1 = new Room(4,1);
+        var room2 = new Room(3,2);
+        var room3 = new Room(5,2);
+
+        var bookShelf1 = new BookShelf();
+        var bookShelf2 = new BookShelf();
+        var bookShelf3 = new BookShelf();
+
+        target.add(room1, bookShelf1);
+        target.add(room2, bookShelf2);
+        target.add(room3, bookShelf3);
+
+        var specimen1 = new Specimen();
+        var specimen2 = new Specimen();
+        var specimen3 = new Specimen();
+        var specimen4 = new Specimen();
+        var specimen5 = new Specimen();
+        var specimen6 = new Specimen();
+        var specimen7 = new Specimen();
+
+        target.add(specimen1, publication1);
+        target.add(specimen2, publication1);
+        target.add(specimen3, publication1);
+        target.add(specimen1, bookShelf1);
+        target.add(specimen2, bookShelf1);
+        target.add(specimen3, bookShelf1);
+
+        target.add(specimen4, publication2);
+        target.add(specimen5, publication2);
+        target.add(specimen4, bookShelf2);
+        target.add(specimen5, bookShelf2);
+
+        target.add(specimen6, publication3);
+        target.add(specimen7, publication3);
+        target.add(specimen6, bookShelf3);
+        target.add(specimen7, bookShelf3);
+
     }
 
     @TestTransaction
@@ -169,14 +235,106 @@ public class LibraryRepositoryTest {
 
     @TestTransaction
     @Test
-    public void createSampleData_getPublication_get1990() {
+    public void createSampleData_getAllPublications_getThreePublications() {
         createSampleData();
 
         target.flushAndClear();
 
-        var publication = this.target.getPublication("1990", "Deutsch");
+        var publications = this.target.getAllPublications();
+        Assertions.assertNotNull(publications);
+        Assertions.assertEquals(3, publications.size());
+    }
+    @TestTransaction
+    @Test
+    public void createSampleData_getPublication_getDieWeltDerTeilchen() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var publication = this.target.getPublication("Die Welt der Teilchen", "Deutsch");
         Assertions.assertNotNull(publication);
-        Assertions.assertEquals("1990", publication.getTitle());
+        Assertions.assertEquals("Die Welt der Teilchen", publication.getTitle());
         Assertions.assertEquals(false, publication.isTranslation());
+    }
+
+    @TestTransaction
+    @Test
+    public void createSampleData_getAllRooms_getThreeRooms() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var rooms = this.target.getAllRooms();
+        Assertions.assertNotNull(rooms);
+        Assertions.assertEquals(3, rooms.size());
+    }
+    @TestTransaction
+    @Test
+    public void createSampleData_getRoom_getRoomNumberThreeOnFloorTwo() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var room = this.target.getRoom(3,2);
+        Assertions.assertNotNull(room);
+        Assertions.assertEquals(3, room.getNumber());
+        Assertions.assertEquals(2, room.getFloor());
+    }
+
+    @TestTransaction
+    @Test
+    public void createSampleData_getAllBookShelves_getThreeBookShelves() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var bookShelves = this.target.getAllBookShelves();
+        Assertions.assertNotNull(bookShelves);
+        Assertions.assertEquals(3, bookShelves.size());
+    }
+    @TestTransaction
+    @Test
+    public void createSampleData_getBookShelf_getBookShelfFromRoomFiveOnFloorTwo() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var room = this.target.getRoom(5,2);
+        Assertions.assertNotNull(room);
+        Assertions.assertEquals(5, room.getNumber());
+        Assertions.assertEquals(2, room.getFloor());
+
+        var bookShelves = this.target.getBookShelvesFromRoom(room.getId());
+        Assertions.assertNotNull(bookShelves);
+        Assertions.assertEquals(1, bookShelves.size());
+    }
+
+    @TestTransaction
+    @Test
+    public void createSampleData_getAllSpecimen_getSevenSpecimen() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var specimen = this.target.getAllSpecimen();
+        Assertions.assertNotNull(specimen);
+        Assertions.assertEquals(7, specimen.size());
+    }
+    @TestTransaction
+    @Test
+    public void createSampleData_getSpecimenByPublication_getRoomNumberThreeOnFloorTwo() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var publication = this.target.getPublication("The Life of Johann Johnson", "Deutsch");
+        Assertions.assertNotNull(publication);
+        Assertions.assertEquals("The Life of Johann Johnson", publication.getTitle());
+        Assertions.assertEquals(false, publication.isTranslation());
+
+        var specimens = this.target.getSpecimensByPublication(publication.getId());
+        Assertions.assertNotNull(specimens);
+        Assertions.assertEquals(2, specimens.size());
+
     }
 }

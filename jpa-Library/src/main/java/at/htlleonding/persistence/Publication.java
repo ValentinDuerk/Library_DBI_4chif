@@ -83,4 +83,8 @@ public class Publication {
     public void setTranslation(boolean translation) {
         isTranslation = translation;
     }
+
+    public Set<Specimen> getSpecimen() {
+        return specimen;
+    }
 }
