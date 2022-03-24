@@ -25,6 +25,12 @@ public class LibraryRepository {
     EntityManager entityManager;
 
     @Transactional
+    public void flushAndClear() {
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    @Transactional
     public void add(Author a) {
         entityManager.persist(a);
     }
@@ -62,34 +68,34 @@ public class LibraryRepository {
 
     @Transactional
     public void add(Media m, Genre g) {
-//        if(m.getId() == null) {
-//            add(m);
-//        }
-//        if(g.getId() == null) {
-//            add(g);
-//        }
-//
-//        m.setGenre(g);
-//        g.getMedias().add(m);
-//
-//        entityManager.persist(m);
-//        entityManager.persist(g);
+        if(m.getId() == null) {
+            add(m);
+        }
+        if(g.getId() == null) {
+            add(g);
+        }
+
+        m.setGenre(g);
+        g.getMedia().add(m);
+
+        entityManager.persist(m);
+        entityManager.persist(g);
     }
 
     @Transactional
     public void add(Media m, Topic t) {
-//        if(m.getId() == null) {
-//            add(m);
-//        }
-//        if(t.getId() == null) {
-//            add(t);
-//        }
-//
-//        m.getTopics().add(t);
-//        t.getMedias().add(m);
-//
-//        entityManager.persist(m);
-//        entityManager.persist(t);
+        if(m.getId() == null) {
+            add(m);
+        }
+        if(t.getId() == null) {
+            add(t);
+        }
+
+        m.getTopics().add(t);
+        t.getMedia().add(m);
+
+        entityManager.persist(m);
+        entityManager.persist(t);
     }
 
     @Transactional
@@ -110,50 +116,50 @@ public class LibraryRepository {
 
     @Transactional
     public void add(Publication p, Media m) {
-//        if(p.getId() == null) {
-//            add(p);
-//        }
-//        if(m.getId() == null) {
-//            add(m);
-//        }
-//
-//        p.setMedia(m);
-//        m.getPublications().add(p);
-//
-//        entityManager.persist(p);
-//        entityManager.persist(m);
+        if(p.getId() == null) {
+            add(p);
+        }
+        if(m.getId() == null) {
+            add(m);
+        }
+
+        p.setMedia(m);
+        m.getPublications().add(p);
+
+        entityManager.persist(p);
+        entityManager.persist(m);
     }
 
     @Transactional
     public void add(Publication pc, Publisher ps) {
-//        if(pc.getId() == null) {
-//            add(pc);
-//        }
-//        if(ps.getId() == null) {
-//            add(ps);
-//        }
-//
-//        pc.setPublisher(ps);
-//        ps.getPublications().add(pc);
-//
-//        entityManager.persist(pc);
-//        entityManager.persist(ps);
+        if(pc.getId() == null) {
+            add(pc);
+        }
+        if(ps.getId() == null) {
+            add(ps);
+        }
+
+        pc.setPublisher(ps);
+        ps.getPublications().add(pc);
+
+        entityManager.persist(pc);
+        entityManager.persist(ps);
     }
 
     @Transactional
     public void add(Publication p, Language l) {
-//        if(p.getId() == null) {
-//            add(p);
-//        }
-//        if(l.getId() == null) {
-//            add(l);
-//        }
-//
-//        p.setLanguage(l);
-//        l.getPublications().add(p);
-//
-//        entityManager.persist(p);
-//        entityManager.persist(l);
+        if(p.getId() == null) {
+            add(p);
+        }
+        if(l.getId() == null) {
+            add(l);
+        }
+
+        p.setLanguage(l);
+        l.getPublications().add(p);
+
+        entityManager.persist(p);
+        entityManager.persist(l);
     }
 
     @Transactional
@@ -228,13 +234,13 @@ public class LibraryRepository {
 
 
     @Transactional
-    public Book getBook(String authorLastName, String title) {
+    public List<Media> getMediasByAuthorAndGenre(String authorLastName, String genre) {
         try {
             return entityManager
-                    .createQuery("select ba.book from BookAuthor ba where ba.book.title = :title and ba.author.lastName = :authorLastName", Book.class)
-                    .setParameter("title", title)
-                    .setParameter("authorLastName", authorLastName)
-                    .getSingleResult();
+                    .createQuery("select m from Media m where m.author.lastName = ?1 and m.genre.keyword = ?2", Media.class)
+                    .setParameter(1, authorLastName)
+                    .setParameter(2, genre)
+                    .getResultList();
         }
         catch (Exception e) {
             System.out.println(e);
@@ -246,9 +252,9 @@ public class LibraryRepository {
     public Publication getPublication(String title, String language) {
         try {
             return entityManager
-                    .createQuery("select p from Publication p join Language l on l.language = :language where p.title = :title and l.id = p.languageid", Publication.class)
-                    .setParameter("title", title)
-                    .setParameter("authorLastName", language)
+                    .createQuery("select p from Publication p where p.title = ?1 and p.language.keyword = ?2", Publication.class)
+                    .setParameter(1, title)
+                    .setParameter(2, language)
                     .getSingleResult();
         }
         catch (Exception e) {
@@ -300,11 +306,11 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public Publisher getPublisher(String keyword) {
+    public Publisher getPublisher(String name) {
         try {
             return entityManager
-                    .createQuery("select p from Publisher p where p.keyword = :keyword", Publisher.class)
-                    .setParameter("keyword", keyword)
+                    .createQuery("select p from Publisher p where p.name = ?1", Publisher.class)
+                    .setParameter(1, name)
                     .getSingleResult();
         }
         catch (Exception e) {
