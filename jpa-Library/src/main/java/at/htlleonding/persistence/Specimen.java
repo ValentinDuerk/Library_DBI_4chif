@@ -19,5 +19,50 @@ public class Specimen {
     @JoinColumn(name = "publicationId")
     private Publication publication;
 
-    // specimen state enum
+    @Enumerated(EnumType.STRING)
+    private SpecimenState specimenState;
+
+    public Specimen() {
+    }
+
+    public Specimen(String purchaseDate, SpecimenState specimenState) {
+        this.purchaseDate = purchaseDate;
+        this.specimenState = specimenState;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public BookShelf getBookShelf() {
+        return bookShelf;
+    }
+
+    public void setBookShelf(BookShelf bookShelf) {
+        this.bookShelf = bookShelf;
+    }
+
+    public void setPublication(Publication publication) {
+        this.publication = publication;
+    }
+
+    public Publication getPublication() {
+        return publication;
+    }
+
+    public SpecimenState getSpecimenState() {
+        return specimenState;
+    }
+
+    public void setSpecimenState(SpecimenState specimenState) {
+        this.specimenState = specimenState;
+    }
 }
