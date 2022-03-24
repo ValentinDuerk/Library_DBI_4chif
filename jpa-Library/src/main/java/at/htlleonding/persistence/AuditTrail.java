@@ -95,7 +95,7 @@ public class AuditTrail {
         this.oldValue = oldValue;
         this.newValue = newValue;
     }
-    
+
     public AuditTrail() {
     }
 }
