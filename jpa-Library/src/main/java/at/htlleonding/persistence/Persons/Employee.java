@@ -1,16 +1,23 @@
 package at.htlleonding.persistence.Persons;
 
 import at.htlleonding.persistence.Person;
+import at.htlleonding.persistence.Sale;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @DiscriminatorValue("Employee")
 public class Employee extends Person {
     @Column
     private double salary;
+
+    @OneToMany(mappedBy = "employee")
+    private Set<Sale> sales = new HashSet<>();
 
     public Employee() {
 
@@ -27,5 +34,9 @@ public class Employee extends Person {
 
     public void setSalary(double salary) {
         this.salary = salary;
+    }
+
+    public Set<Sale> getSales() {
+        return sales;
     }
 }
