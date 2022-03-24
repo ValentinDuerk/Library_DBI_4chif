@@ -1,8 +1,9 @@
-package at.htlleonding.persistence.Persons;
+package at.htlleonding.persistence.People;
 
 import at.htlleonding.persistence.LendOut;
 import at.htlleonding.persistence.Person;
 import at.htlleonding.persistence.Reservation;
+import at.htlleonding.persistence.Sale;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -22,6 +23,9 @@ public class Customer extends Person {
 
     @OneToMany(mappedBy = "customer")
     private Set<LendOut> lendOuts = new HashSet<>();
+
+    @OneToMany(mappedBy = "customer")
+    private Set<Sale> sales = new HashSet<>();
 
     public Customer(String firstName, String lastName, String eMail, String telNumber, boolean isEmployee) {
         super(firstName, lastName, eMail, telNumber);
@@ -45,5 +49,9 @@ public class Customer extends Person {
 
     public Set<LendOut> getLendOuts() {
         return lendOuts;
+    }
+
+    public Set<Sale> getSales() {
+        return sales;
     }
 }

@@ -1,10 +1,9 @@
 package at.htlleonding.persistence;
 
-import at.htlleonding.persistence.Persons.*;
+import at.htlleonding.persistence.People.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +25,7 @@ public class Sale {
 
     @ManyToOne
     @JoinColumn(name = "customerId")
-    private Customer costumer;
+    private Customer customer;
 
     public Sale() {
 
@@ -59,11 +58,11 @@ public class Sale {
         this.employee = employee;
     }
 
-    public Customer getCostumer() {
-        return costumer;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCostumer(Customer costumer) {
-        this.costumer = costumer;
+    public void setCustomer(Customer costumer) {
+        this.customer = costumer;
     }
 }
