@@ -1,6 +1,7 @@
 package at.htlleonding.persistence.MediaTypes;
 import at.htlleonding.persistence.Media;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -9,7 +10,7 @@ public class EBook extends Media {
     public EBook() {
     }
 
-    public EBook(Date publicationDate) {
+    public EBook(LocalDate publicationDate) {
         super(publicationDate);
     }
 }
