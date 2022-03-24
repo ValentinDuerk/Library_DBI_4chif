@@ -8,25 +8,25 @@ public class MediaType {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String designation;
 
     @Column(nullable = false)
     private Integer price;
 
-    public MediaType(String name, Integer price) {
-        this.name = name;
+    public MediaType(String designation, Integer price) {
+        this.designation = designation;
         this.price = price;
     }
 
     public MediaType() {
     }
 
-    public String getName() {
-        return name;
+    public String getDesignation() {
+        return designation;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 
     public Integer getPrice() {

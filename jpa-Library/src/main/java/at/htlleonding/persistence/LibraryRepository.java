@@ -2,12 +2,15 @@ package at.htlleonding.persistence;
 ///home/peter/src/dbi4/quarkus-hibernate-cmdline
 
 import at.htlleonding.persistence.MediaTypes.Book;
+import at.htlleonding.persistence.People.Customer;
+import at.htlleonding.persistence.People.Employee;
 
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.MapsId;
 import javax.transaction.Transactional;
 
 // @Transactional
@@ -67,6 +70,9 @@ public class LibraryRepository {
 
     @Transactional
     public <E> void add(E e) {entityManager.persist(e);}
+    @Transactional
+    public <E> void remove(E e) {entityManager.remove(e);}
+
 
     @Transactional
     public void add(Media m, Genre g) {
@@ -213,6 +219,150 @@ public class LibraryRepository {
     }
 
     @Transactional
+    public void add(Publication p, Reservation r) {
+        if(p.getId() == null) {
+            add(p);
+        }
+        if(r.getId() == null) {
+            add(r);
+        }
+
+        p.getReservations().add(r);
+        r.setPublication(p);
+
+        entityManager.persist(p);
+        entityManager.persist(r);
+    }
+
+    @Transactional
+    public void add(Reservation r, Customer c) {
+        if(r.getId() == null) {
+            add(r);
+        }
+        if(c.getId() == null) {
+            add(c);
+        }
+
+        r.setCustomer(c);
+        c.getReservations().add(r);
+
+        entityManager.persist(r);
+        entityManager.persist(c);
+    }
+
+    @Transactional
+    public void add(Specimen s, LendOut l) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(l.getId() == null) {
+            add(l);
+        }
+
+        s.setLendOut(l);
+        l.setSpecimen(s);
+
+        entityManager.persist(s);
+        entityManager.persist(l);
+    }
+
+    @Transactional
+    public void add(LendOut l, Customer c) {
+        if(l.getId() == null) {
+            add(l);
+        }
+        if(c.getId() == null) {
+            add(c);
+        }
+
+        l.setCustomer(c);
+        c.getLendOuts().add(l);
+
+        entityManager.persist(l);
+        entityManager.persist(c);
+    }
+
+    @Transactional
+    public void add(Sale s, Customer c) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(c.getId() == null) {
+            add(c);
+        }
+
+        s.setCustomer(c);
+        c.getSales().add(s);
+
+        entityManager.persist(s);
+        entityManager.persist(c);
+    }
+
+    @Transactional
+    public void add(Sale s, Employee e) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(e.getId() == null) {
+            add(e);
+        }
+
+        s.setEmployee(e);
+        e.getSales().add(s);
+
+        entityManager.persist(s);
+        entityManager.persist(e);
+    }
+
+    @Transactional
+    public void add(Sale s, SalePosition sp) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(sp.getId() == null) {
+            add(sp);
+        }
+
+        s.getSalePositions().add(sp);
+        sp.setSale(s);
+
+        entityManager.persist(s);
+        entityManager.persist(sp);
+    }
+
+    @Transactional
+    public void add(Specimen s, SalePosition sp) {
+        if(s.getId() == null) {
+            add(s);
+        }
+        if(sp.getId() == null) {
+            add(sp);
+        }
+
+        s.setSalePosition(sp);
+        sp.setSpecimen(s);
+
+        entityManager.persist(s);
+        entityManager.persist(sp);
+    }
+
+    @Transactional
+    public void add(Person p, Location l) {
+        if(p.getId() == null) {
+            add(p);
+        }
+        if(l.getId() == null) {
+            add(l);
+        }
+
+        p.setLocation(l);
+        l.getPersons().add(p);
+
+        entityManager.persist(p);
+        entityManager.persist(l);
+    }
+
+    @Transactional
     public List<Media> getAllMedia() {
         return
                 entityManager
@@ -289,6 +439,78 @@ public class LibraryRepository {
         return
                 entityManager
                         .createQuery("select s from Specimen s", Specimen.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<AuditTrail> getAllAuditTrails() {
+        return
+                entityManager
+                        .createQuery("select a from AuditTrail a", AuditTrail.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Location> getAllLocations() {
+        return
+                entityManager
+                        .createQuery("select l from Location l", Location.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Customer> getAllCustomer() {
+        return
+                entityManager
+                        .createQuery("select c from Customer c", Customer.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Employee> getAllEmployees() {
+        return
+                entityManager
+                        .createQuery("select e from Employee e", Employee.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Reservation> getAllReservations() {
+        return
+                entityManager
+                        .createQuery("select r from Reservation r", Reservation.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<LendOut> getAllLendOuts() {
+        return
+                entityManager
+                        .createQuery("select l from LendOut l", LendOut.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<Sale> getAllSales() {
+        return
+                entityManager
+                        .createQuery("select s from Sale s", Sale.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<SalePosition> getAllSalePositions() {
+        return
+                entityManager
+                        .createQuery("select s from SalePosition s", SalePosition.class)
+                        .getResultList();
+    }
+
+    @Transactional
+    public List<MediaType> getAllMediaTypes() {
+        return
+                entityManager
+                        .createQuery("select m from MediaType m", MediaType.class)
                         .getResultList();
     }
 
@@ -437,60 +659,146 @@ public class LibraryRepository {
         }
     }
 
-//    @Transactional
-//    public List<Book> getAllBooks(boolean includeAuthors) {
-//        try {
-//            var query = includeAuthors ?
-//                    entityManager.createQuery("select distinct b from Book b join fetch b.myAuthors", Book.class)
-//                    :
-//                    entityManager.createQuery("select b from Book b", Book.class);
-//            return query
-//                    .getResultList();
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//            return null;
-//        }
-//    }
+    @Transactional
+    public List<AuditTrail> getAuditTrailsByUser(String user) {
+        try {
+            return entityManager
+                    .createQuery("select a from AuditTrail a where s.user = ?1", AuditTrail.class)
+                    .setParameter(1, user)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
-//    @Transactional
-//    public List<Book> getBooksOfTopic(String keyword) {
-//        try {
-//            var query = entityManager
-//                    .createQuery(
-//                            "select distinct b from Book b " +
-//                                    "join b.myAuthors " +
-//                                    "join b.topics " +
-//                                    "where " +
-//                                    "(select count(t.keyword) from b.topics t where t.keyword = :keyword) > 0 ", Book.class);
-//
-//            return query
-//                    .setParameter("keyword", keyword)
-//                    .getResultList();
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//            return null;
-//        }
-//    }
+    @Transactional
+    public Location getLocationByName(String name) {
+        try {
+            return entityManager
+                    .createQuery("select l from Location l where l.name = ?1", Location.class)
+                    .setParameter(1, name)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 
-//    @Transactional
-//    public List<Book> getBooksOfGenre(String keyword) {
-//        try {
-//            var query = entityManager
-//                    .createQuery(
-//                            "select distinct b from Book b " +
-//                                    "join b.myAuthors " +
-//                                    "join b.genre " +
-//                                    "where " +
-//                                    "b.genre.keyword = :keyword", Book.class);
-//            return query
-//                    .setParameter("keyword", keyword)
-//                    .getResultList();
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//            return null;
-//        }
-//    }
+    @Transactional
+    public Customer getCustomerByFirstNameAndLastName(String firstName, String lastName) {
+        try {
+            return entityManager
+                    .createQuery("select c from Customer c where c.firstName = ?1 and c.lastName = ?2", Customer.class)
+                    .setParameter(1, firstName)
+                    .setParameter(2, lastName)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public Employee getEmployeeByFirstNameAndLastName(String firstName, String lastName) {
+        try {
+            return entityManager
+                    .createQuery("select e from Employee e where e.firstName = ?1 and e.lastName = ?2", Employee.class)
+                    .setParameter(1, firstName)
+                    .setParameter(2, lastName)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<Reservation> getReservationsOfPublicationByCustomer(int publicationId, String customerId) {
+        try {
+            return entityManager
+                    .createQuery("select r from Reservation r where r.publication.id = ?1 and e.customer.id = ?2", Reservation.class)
+                    .setParameter(1, publicationId)
+                    .setParameter(2, customerId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<LendOut> getLendOutsByCustomer(String customerId) {
+        try {
+            return entityManager
+                    .createQuery("select l from LendOut l where l.customer.id = ?1", LendOut.class)
+                    .setParameter(1, customerId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<Sale> getSalesByEmployee(String employeeId) {
+        try {
+            return entityManager
+                    .createQuery("select s from Sale s where s.employee.id = ?1", Sale.class)
+                    .setParameter(1, employeeId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<Sale> getSalesByCustomer(String customerId) {
+        try {
+            return entityManager
+                    .createQuery("select s from Sale s where s.customer.id = ?1", Sale.class)
+                    .setParameter(1, customerId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<SalePosition> getSalePositionsBySale(String saleId) {
+        try {
+            return entityManager
+                    .createQuery("select s from SalePosition s where s.sale.id = ?1", SalePosition.class)
+                    .setParameter(1, saleId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<MediaType> getMediaTypeByName(String mediaType) {
+        try {
+            return entityManager
+                    .createQuery("select m from MediaType m where m.designation = ?1", MediaType.class)
+                    .setParameter(1, mediaType)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 }
