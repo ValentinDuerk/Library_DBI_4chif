@@ -25,6 +25,9 @@ public class Publication {
     @JoinColumn(name = "mediaId")
     private Media media;
 
+    @OneToMany(mappedBy = "publication")
+    private Set<Reservation> reservations = new HashSet<>();
+
     @Column(nullable = false)
     private boolean isTranslation;
 
@@ -82,6 +85,10 @@ public class Publication {
 
     public void setTranslation(boolean translation) {
         isTranslation = translation;
+    }
+
+    public Set<Reservation> getReservations() {
+        return reservations;
     }
 
     public Set<Specimen> getSpecimen() {
