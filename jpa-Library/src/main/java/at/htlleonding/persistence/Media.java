@@ -59,4 +59,8 @@ public class Media {
     public void setPublicationDate(Date publicationDate) {
         this.publicationDate = publicationDate;
     }
+
+    public Set<Publication> getPublications() {
+        return publications;
+    }
 }

@@ -1,9 +1,7 @@
 package at.htlleonding.persistence;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,7 +11,7 @@ public class Language {
     private Integer id;
 
     @Column(nullable = false)
-    private String keyWord;
+    private String keyword;
 
     @OneToMany(mappedBy = "language")
     private Set<Publication> publications = new HashSet<>();
@@ -23,19 +21,19 @@ public class Language {
     }
 
     public Language(String keyWord) {
-        this.keyWord = keyWord;
+        this.keyword = keyWord;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getKeyWord() {
-        return keyWord;
+    public String getKeyword() {
+        return keyword;
     }
 
-    public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public Set<Publication> getPublications() {

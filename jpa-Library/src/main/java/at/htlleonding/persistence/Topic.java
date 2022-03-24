@@ -2,7 +2,6 @@ package at.htlleonding.persistence;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,7 +11,7 @@ public class Topic {
     private Integer id;
 
     @ManyToMany()
-    private Set<Media> mediaOfTopic = new HashSet<>();
+    private Set<Media> media = new HashSet<>();
 
     @Column
     private String keyword;
@@ -34,5 +33,5 @@ public class Topic {
         this.keyword = keyword;
     }
 
-    public Set<Media> getMedia() { return mediaOfTopic; }
+    public Set<Media> getMedia() { return media; }
 }

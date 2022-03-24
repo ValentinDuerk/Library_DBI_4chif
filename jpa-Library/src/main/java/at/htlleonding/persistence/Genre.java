@@ -14,7 +14,7 @@ public class Genre {
     private String keyword;
 
     @OneToMany(mappedBy = "genre")
-    private Set<Media> mediaOfGenre = new HashSet<>();
+    private Set<Media> media = new HashSet<>();
 
     public Genre(String keyword) {
         this.keyword = keyword;
@@ -35,6 +35,6 @@ public class Genre {
     }
 
     public Set<Media> getMedia() {
-        return mediaOfGenre;
+        return media;
     }
 }
