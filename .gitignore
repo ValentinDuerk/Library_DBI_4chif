@@ -1,10 +1,8 @@
 
-jpa-Library/target/jpa-Library-dev.jar
+*.xml
+*.class
 *.dat
 *.lst
 jpa-Library/.idea/jpa-Library.iml
-jpa-Library/.idea/misc.xml
-*.class
-jpa-Library/.idea/modules.xml
 jpa-Library/jpa-Library.iml
-*.xml
+jpa-Library/target/jpa-Library-dev.jar

@@ -32,6 +32,10 @@ public class Media {
     public Media() {
     }
 
+    public Media(Date publicationDate) {
+        this.publicationDate = publicationDate;
+    }
+
     public Integer getId() {
         return id;
     }
