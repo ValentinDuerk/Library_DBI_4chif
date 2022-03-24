@@ -1,6 +1,7 @@
 package at.htlleonding.persistence;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -10,7 +11,7 @@ public class Specimen {
     private Integer id;
 
     @Column
-    private Date purchaseDate;
+    private LocalDate purchaseDate;
 
     @ManyToOne
     @JoinColumn(name = "bookShelfId")
@@ -32,7 +33,7 @@ public class Specimen {
     public Specimen() {
     }
 
-    public Specimen(Date purchaseDate, SpecimenState specimenState) {
+    public Specimen(LocalDate purchaseDate, SpecimenState specimenState) {
         this.purchaseDate = purchaseDate;
         this.specimenState = specimenState;
     }
@@ -41,11 +42,11 @@ public class Specimen {
         return id;
     }
 
-    public Date getPurchaseDate() {
+    public LocalDate getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(Date purchaseDate) {
+    public void setPurchaseDate(LocalDate purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 

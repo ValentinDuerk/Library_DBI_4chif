@@ -3,6 +3,7 @@ package at.htlleonding.persistence;
 import at.htlleonding.persistence.Persons.Customer;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,10 +21,10 @@ public class LendOut {
     private Specimen specimen;
 
     @Column
-    private Date lendOutDate;
+    private LocalDate lendOutDate;
 
     @Column
-    private Date ReturnDate;
+    private LocalDate ReturnDate;
 
     @Column
     private Integer extensions;
@@ -31,7 +32,7 @@ public class LendOut {
     public LendOut() {
     }
 
-    public LendOut(Date lendOutDate, Date returnDate, Integer extensions) {
+    public LendOut(LocalDate lendOutDate, LocalDate returnDate, Integer extensions) {
         this.lendOutDate = lendOutDate;
         ReturnDate = returnDate;
         this.extensions = extensions;
@@ -57,19 +58,19 @@ public class LendOut {
         this.specimen = specimen;
     }
 
-    public Date getLendOutDate() {
+    public LocalDate getLendOutDate() {
         return lendOutDate;
     }
 
-    public void setLendOutDate(Date lendOutDate) {
+    public void setLendOutDate(LocalDate lendOutDate) {
         this.lendOutDate = lendOutDate;
     }
 
-    public Date getReturnDate() {
+    public LocalDate getReturnDate() {
         return ReturnDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         ReturnDate = returnDate;
     }
 

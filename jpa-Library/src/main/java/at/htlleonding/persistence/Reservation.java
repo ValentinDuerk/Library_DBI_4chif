@@ -3,6 +3,7 @@ package at.htlleonding.persistence;
 import at.htlleonding.persistence.Persons.Customer;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -23,13 +24,13 @@ public class Reservation {
     private boolean isStillReserved;
 
     @Column
-    private Date reservationDate;
+    private LocalDate reservationDate;
 
     public Reservation() {
 
     }
 
-    public Reservation(boolean isStillReserved, Date reservationDate) {
+    public Reservation(boolean isStillReserved, LocalDate reservationDate) {
         this.isStillReserved = isStillReserved;
         this.reservationDate = reservationDate;
     }
@@ -62,11 +63,11 @@ public class Reservation {
         isStillReserved = stillReserved;
     }
 
-    public Date getReservationDate() {
+    public LocalDate getReservationDate() {
         return reservationDate;
     }
 
-    public void setReservationDate(Date reservationDate) {
+    public void setReservationDate(LocalDate reservationDate) {
         this.reservationDate = reservationDate;
     }
 }

@@ -86,7 +86,7 @@ public class AuditTrail {
         this.newValue = newValue;
     }
 
-    public AuditTrail(String user, Date date, String table, Action action, Integer contentId, String oldValue, String newValue) {
+    public AuditTrail(String user, LocalDate date, String table, Action action, Integer contentId, String oldValue, String newValue) {
         this.user = user;
         this.date = date;
         this.table = table;

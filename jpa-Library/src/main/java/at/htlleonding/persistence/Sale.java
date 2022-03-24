@@ -3,6 +3,7 @@ package at.htlleonding.persistence;
 import at.htlleonding.persistence.Persons.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +18,7 @@ public class Sale {
     private Set<SalePosition> salePositions = new HashSet<>();
 
     @Column
-    private Date saleDate;
+    private LocalDate saleDate;
 
     @ManyToOne
     @JoinColumn(name = "saleEmployeeId")
@@ -31,7 +32,7 @@ public class Sale {
 
     }
 
-    public Sale(Date saleDate) {
+    public Sale(LocalDate saleDate) {
         this.saleDate = saleDate;
     }
 
@@ -42,11 +43,11 @@ public class Sale {
         return salePositions;
     }
 
-    public Date getSaleDate() {
+    public LocalDate getSaleDate() {
         return saleDate;
     }
 
-    public void setSaleDate(Date saleDate) {
+    public void setSaleDate(LocalDate saleDate) {
         this.saleDate = saleDate;
     }
 
