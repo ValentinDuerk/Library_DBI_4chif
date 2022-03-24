@@ -1,6 +1,5 @@
 package at.htlleonding.persistence;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -39,7 +38,7 @@ public class Author {
         this.dateBirth = dob;
     }
 
-    public Set<Media> getMedias() {
+    public Set<Media> getMedia() {
         return media;
     }
 
