@@ -1,5 +1,6 @@
 package at.htlleonding.persistence;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -12,12 +13,12 @@ public class AuditTrail {
     private String user;
 
     @Column(nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private String table;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Action action;
 
     @Column
@@ -37,11 +38,11 @@ public class AuditTrail {
         this.user = user;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

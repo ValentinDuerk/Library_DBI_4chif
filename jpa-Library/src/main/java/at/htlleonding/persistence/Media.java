@@ -1,6 +1,7 @@
 package at.htlleonding.persistence;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class Media {
     private Genre genre;
 
     @Column
-    private Date publicationDate;
+    private LocalDate publicationDate;
 
     @OneToMany(mappedBy = "media")
     private Set<Publication> publications = new HashSet<>();
@@ -32,7 +33,7 @@ public class Media {
     public Media() {
     }
 
-    public Media(Date publicationDate) {
+    public Media(LocalDate publicationDate) {
         this.publicationDate = publicationDate;
     }
 
@@ -52,7 +53,7 @@ public class Media {
         return genre;
     }
 
-    public Date getPublicationDate() {
+    public LocalDate getPublicationDate() {
         return publicationDate;
     }
 
@@ -60,7 +61,7 @@ public class Media {
         this.genre = genre;
     }
 
-    public void setPublicationDate(Date publicationDate) {
+    public void setPublicationDate(LocalDate publicationDate) {
         this.publicationDate = publicationDate;
     }
 

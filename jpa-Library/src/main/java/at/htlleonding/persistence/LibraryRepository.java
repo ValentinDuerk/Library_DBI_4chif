@@ -213,7 +213,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<Media> getAllMedias() {
+    public List<Media> getAllMedia() {
         return
                 entityManager
                         .createQuery("select m from Media m", Media.class)
@@ -309,7 +309,7 @@ public class LibraryRepository {
 
 
     @Transactional
-    public List<Media> getMediasByAuthorAndGenre(String authorLastName, String genre) {
+    public List<Media> getMediaByAuthorAndGenre(String authorLastName, String genre) {
         try {
             return entityManager
                     .createQuery("select m from Media m where m.author.lastName = ?1 and m.genre.keyword = ?2", Media.class)

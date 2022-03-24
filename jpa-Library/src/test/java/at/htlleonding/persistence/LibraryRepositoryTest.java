@@ -189,6 +189,30 @@ public class LibraryRepositoryTest {
 
     @TestTransaction
     @Test
+    public void createSampleData_getAllMedia_getTwoMedia() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var media = this.target.getAllMedia();
+        Assertions.assertNotNull(media);
+        Assertions.assertEquals(2, media.size());
+    }
+    @TestTransaction
+    @Test
+    public void createSampleData_getMediaByAuthorAndGenre_getMediaFromFranzesWithGenreSachbuch() {
+        createSampleData();
+
+        target.flushAndClear();
+
+        var media = this.target.getMediaByAuthorAndGenre("Franzes", "Sachbuch");
+        Assertions.assertNotNull(media);
+        Assertions.assertEquals(1, media.size());
+    }
+
+
+    @TestTransaction
+    @Test
     public void createSampleData_getAllLanguages_getTwoLanguages() {
         createSampleData();
 
@@ -327,9 +351,9 @@ public class LibraryRepositoryTest {
 
         target.flushAndClear();
 
-        var publication = this.target.getPublication("The Life of Johann Johnson", "Deutsch");
+        var publication = this.target.getPublication("Das Leben von Johann Johnson", "Deutsch");
         Assertions.assertNotNull(publication);
-        Assertions.assertEquals("The Life of Johann Johnson", publication.getTitle());
+        Assertions.assertEquals("Das Leben von Johann Johnson", publication.getTitle());
         Assertions.assertEquals(false, publication.isTranslation());
 
         var specimens = this.target.getSpecimensByPublication(publication.getId());
