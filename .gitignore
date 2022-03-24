@@ -3,6 +3,6 @@
 *.class
 *.dat
 *.lst
-jpa-Library/.idea/jpa-Library.iml
-jpa-Library/jpa-Library.iml
+*.iml
 jpa-Library/target/jpa-Library-dev.jar
+
