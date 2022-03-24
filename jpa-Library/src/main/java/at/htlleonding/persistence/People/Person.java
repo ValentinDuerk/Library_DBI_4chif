@@ -1,4 +1,6 @@
-package at.htlleonding.persistence;
+package at.htlleonding.persistence.People;
+
+import at.htlleonding.persistence.Location;
 
 import javax.persistence.*;
 
@@ -56,7 +58,7 @@ public class Person {
         this.lastName = lastName;
     }
 
-    public String geteMail() {
+    public String getEmail() {
         return eMail;
     }
 

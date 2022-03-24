@@ -1,5 +1,7 @@
 package at.htlleonding.persistence;
 
+import at.htlleonding.persistence.People.Person;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;

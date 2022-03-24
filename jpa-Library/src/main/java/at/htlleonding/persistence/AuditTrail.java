@@ -27,7 +27,7 @@ public class AuditTrail {
     @Column
     private String oldValue = null;
 
-    @Column(nullable = false)
+    @Column
     private String newValue;
 
     public String getUser() {

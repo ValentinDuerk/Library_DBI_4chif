@@ -29,9 +29,9 @@ public class Reservation {
 
     }
 
-    public Reservation(boolean isStillReserved, LocalDate reservationDate) {
-        this.isStillReserved = isStillReserved;
+    public Reservation(LocalDate reservationDate) {
         this.reservationDate = reservationDate;
+        isStillReserved = true;
     }
 
     public Integer getId() {

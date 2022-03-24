@@ -31,10 +31,9 @@ public class LendOut {
     public LendOut() {
     }
 
-    public LendOut(LocalDate lendOutDate, LocalDate returnDate, Integer extensions) {
+    public LendOut(LocalDate lendOutDate, LocalDate returnDate) {
         this.lendOutDate = lendOutDate;
         ReturnDate = returnDate;
-        this.extensions = extensions;
     }
 
     public Integer getId() {

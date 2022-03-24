@@ -1,7 +1,6 @@
 package at.htlleonding.persistence.People;
 
 import at.htlleonding.persistence.LendOut;
-import at.htlleonding.persistence.Person;
 import at.htlleonding.persistence.Reservation;
 import at.htlleonding.persistence.Sale;
 

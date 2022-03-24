@@ -1,16 +1,15 @@
 package at.htlleonding.persistence;
 ///home/peter/src/dbi4/quarkus-hibernate-cmdline
 
-import at.htlleonding.persistence.MediaTypes.Book;
 import at.htlleonding.persistence.People.Customer;
 import at.htlleonding.persistence.People.Employee;
+import at.htlleonding.persistence.People.Person;
 
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.MapsId;
 import javax.transaction.Transactional;
 
 // @Transactional
@@ -32,41 +31,6 @@ public class LibraryRepository {
         entityManager.flush();
         entityManager.clear();
     }
-
-//    @Transactional
-//    public void add(Author a) {
-//        entityManager.persist(a);
-//    }
-//
-//    @Transactional
-//    public void add(Topic t) {
-//        entityManager.persist(t);
-//    }
-//
-//    @Transactional
-//    public void add(Genre g) {
-//        entityManager.persist(g);
-//    }
-//
-//    @Transactional
-//    public void add(Language l) {
-//        entityManager.persist(l);
-//    }
-//
-//    @Transactional
-//    public void add(Publisher p) {
-//        entityManager.persist(p);
-//    }
-//
-//    @Transactional
-//    public void add(Publication p) {
-//        entityManager.persist(p);
-//    }
-//
-//    @Transactional
-//    public void add(Media m) {
-//        entityManager.persist(m);
-//    }
 
     @Transactional
     public <E> void add(E e) {entityManager.persist(e);}
@@ -516,11 +480,12 @@ public class LibraryRepository {
 
 
     @Transactional
-    public Author getAuthorByLastName(String lastName) {
+    public Author getAuthorByFirstNameAndLastName(String firstName, String lastName) {
         try {
             return entityManager
-                    .createQuery("select p from Author p where p.lastName = :name ", Author.class)
-                    .setParameter("name", lastName)
+                    .createQuery("select p from Author p where p.firstName = ?1 and p.lastName = ?2 ", Author.class)
+                    .setParameter(1, firstName)
+                    .setParameter(2, lastName)
                     .getSingleResult();
         }
         catch (Exception e) {
@@ -528,7 +493,6 @@ public class LibraryRepository {
             return null;
         }
     }
-
 
     @Transactional
     public List<Media> getMediaByAuthorAndGenre(String authorLastName, String genre) {
@@ -718,7 +682,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<Reservation> getReservationsOfPublicationByCustomer(int publicationId, String customerId) {
+    public List<Reservation> getReservationsOfPublicationByCustomer(int publicationId, int customerId) {
         try {
             return entityManager
                     .createQuery("select r from Reservation r where r.publication.id = ?1 and r.customer.id = ?2", Reservation.class)
@@ -733,7 +697,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<LendOut> getLendOutsByCustomer(String customerId) {
+    public List<LendOut> getLendOutsByCustomer(int customerId) {
         try {
             return entityManager
                     .createQuery("select l from LendOut l where l.customer.id = ?1", LendOut.class)
@@ -747,7 +711,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<Sale> getSalesByEmployee(String employeeId) {
+    public List<Sale> getSalesByEmployee(int employeeId) {
         try {
             return entityManager
                     .createQuery("select s from Sale s where s.employee.id = ?1", Sale.class)
@@ -761,7 +725,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<Sale> getSalesByCustomer(String customerId) {
+    public List<Sale> getSalesByCustomer(int customerId) {
         try {
             return entityManager
                     .createQuery("select s from Sale s where s.customer.id = ?1", Sale.class)
@@ -775,7 +739,7 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<SalePosition> getSalePositionsBySale(String saleId) {
+    public List<SalePosition> getSalePositionsBySale(int saleId) {
         try {
             return entityManager
                     .createQuery("select s from SalePosition s where s.sale.id = ?1", SalePosition.class)
@@ -789,12 +753,12 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<MediaType> getMediaTypeByName(String mediaType) {
+    public MediaType getMediaTypeByDesignation(String mediaType) {
         try {
             return entityManager
                     .createQuery("select m from MediaType m where m.designation = ?1", MediaType.class)
                     .setParameter(1, mediaType)
-                    .getResultList();
+                    .getSingleResult();
         }
         catch (Exception e) {
             System.out.println(e);
