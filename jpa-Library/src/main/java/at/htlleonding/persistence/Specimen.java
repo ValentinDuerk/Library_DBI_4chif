@@ -1,6 +1,7 @@
 package at.htlleonding.persistence;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Specimen {
@@ -9,7 +10,7 @@ public class Specimen {
     private Integer id;
 
     @Column
-    private String purchaseDate;
+    private Date purchaseDate;
 
     @ManyToOne
     @JoinColumn(name = "bookShelfId")
@@ -19,13 +20,16 @@ public class Specimen {
     @JoinColumn(name = "publicationId")
     private Publication publication;
 
+    @OneToOne(mappedBy = "specimen")
+    private SalePosition salePosition;
+
     @Enumerated(EnumType.STRING)
     private SpecimenState specimenState;
 
     public Specimen() {
     }
 
-    public Specimen(String purchaseDate, SpecimenState specimenState) {
+    public Specimen(Date purchaseDate, SpecimenState specimenState) {
         this.purchaseDate = purchaseDate;
         this.specimenState = specimenState;
     }
@@ -34,11 +38,11 @@ public class Specimen {
         return id;
     }
 
-    public String getPurchaseDate() {
+    public Date getPurchaseDate() {
         return purchaseDate;
     }
 
-    public void setPurchaseDate(String purchaseDate) {
+    public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
@@ -64,5 +68,13 @@ public class Specimen {
 
     public void setSpecimenState(SpecimenState specimenState) {
         this.specimenState = specimenState;
+    }
+
+    public SalePosition getSalePosition() {
+        return salePosition;
+    }
+
+    public void setSalePosition(SalePosition salePosition) {
+        this.salePosition = salePosition;
     }
 }
