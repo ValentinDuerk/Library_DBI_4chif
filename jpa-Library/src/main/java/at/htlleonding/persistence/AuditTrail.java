@@ -22,13 +22,13 @@ public class AuditTrail {
     private Action action;
 
     @Column
-    private Integer ContentId = null;
+    private Integer contentId = null;
 
     @Column
-    private String OldValue = null;
+    private String oldValue = null;
 
     @Column(nullable = false)
-    private String NewValue;
+    private String newValue;
 
     public String getUser() {
         return user;
@@ -63,26 +63,39 @@ public class AuditTrail {
     }
 
     public Integer getContentId() {
-        return ContentId;
+        return contentId;
     }
 
     public void setContentId(Integer contentId) {
-        ContentId = contentId;
+        this.contentId = contentId;
     }
 
     public String getOldValue() {
-        return OldValue;
+        return oldValue;
     }
 
     public void setOldValue(String oldValue) {
-        OldValue = oldValue;
+        this.oldValue = oldValue;
     }
 
     public String getNewValue() {
-        return NewValue;
+        return newValue;
     }
 
     public void setNewValue(String newValue) {
-        NewValue = newValue;
+        this.newValue = newValue;
+    }
+
+    public AuditTrail(String user, Date date, String table, Action action, Integer contentId, String oldValue, String newValue) {
+        this.user = user;
+        this.date = date;
+        this.table = table;
+        this.action = action;
+        this.contentId = contentId;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+    }
+    
+    public AuditTrail() {
     }
 }

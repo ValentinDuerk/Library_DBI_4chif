@@ -23,6 +23,9 @@ public class Specimen {
     @OneToOne(mappedBy = "specimen")
     private SalePosition salePosition;
 
+    @OneToOne(mappedBy = "specimen")
+    private LendOut lendOut;
+
     @Enumerated(EnumType.STRING)
     private SpecimenState specimenState;
 
@@ -76,5 +79,13 @@ public class Specimen {
 
     public void setSalePosition(SalePosition salePosition) {
         this.salePosition = salePosition;
+    }
+
+    public LendOut getLendOut() {
+        return lendOut;
+    }
+
+    public void setLendOut(LendOut lendOut) {
+        this.lendOut = lendOut;
     }
 }
