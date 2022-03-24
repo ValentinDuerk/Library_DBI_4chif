@@ -534,7 +534,7 @@ public class LibraryRepository {
     public List<Media> getMediaByAuthorAndGenre(String authorLastName, String genre) {
         try {
             return entityManager
-                    .createQuery("select m from Media m where m.author.lastName = ?1 and m.genre.keyword = ?2", Media.class)
+                    .createQuery("select m from Media m join m.authors a on a.lastName = ?1 where m.genre.keyword = ?2", Media.class)
                     .setParameter(1, authorLastName)
                     .setParameter(2, genre)
                     .getResultList();
@@ -663,7 +663,7 @@ public class LibraryRepository {
     public List<AuditTrail> getAuditTrailsByUser(String user) {
         try {
             return entityManager
-                    .createQuery("select a from AuditTrail a where s.user = ?1", AuditTrail.class)
+                    .createQuery("select a from AuditTrail a where a.user = ?1", AuditTrail.class)
                     .setParameter(1, user)
                     .getResultList();
         }
@@ -721,7 +721,7 @@ public class LibraryRepository {
     public List<Reservation> getReservationsOfPublicationByCustomer(int publicationId, String customerId) {
         try {
             return entityManager
-                    .createQuery("select r from Reservation r where r.publication.id = ?1 and e.customer.id = ?2", Reservation.class)
+                    .createQuery("select r from Reservation r where r.publication.id = ?1 and r.customer.id = ?2", Reservation.class)
                     .setParameter(1, publicationId)
                     .setParameter(2, customerId)
                     .getResultList();
