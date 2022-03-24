@@ -1,10 +1,9 @@
 package at.htlleonding.persistence;
 
-import at.htlleonding.persistence.Persons.Customer;
+import at.htlleonding.persistence.People.Customer;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 public class LendOut {

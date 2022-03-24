@@ -1,4 +1,4 @@
-package at.htlleonding.persistence.Persons;
+package at.htlleonding.persistence.People;
 
 import at.htlleonding.persistence.Person;
 import at.htlleonding.persistence.Sale;
