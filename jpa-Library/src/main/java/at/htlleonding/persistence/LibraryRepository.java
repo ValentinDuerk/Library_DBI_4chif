@@ -35,8 +35,19 @@ public class LibraryRepository {
     @Transactional
     public <E> void add(E e) {entityManager.persist(e);}
     @Transactional
+    public <E> void add(E[] e) {
+        for (var entities : e) {
+            entityManager.persist(entities);
+        }
+    }
+    @Transactional
     public <E> void remove(E e) {entityManager.remove(e);}
-
+    @Transactional
+    public <E> void remove(E[] e) {
+        for (var entities : e) {
+            entityManager.remove(entities);
+        }
+    }
 
     @Transactional
     public void add(Media m, Genre g) {
@@ -495,12 +506,13 @@ public class LibraryRepository {
     }
 
     @Transactional
-    public List<Media> getMediaByAuthorAndGenre(String authorLastName, String genre) {
+    public List<Media> getMediaByAuthorAndGenre(String authorFirstName, String authorLastName, String genre) {
         try {
             return entityManager
-                    .createQuery("select m from Media m join m.authors a on a.lastName = ?1 where m.genre.keyword = ?2", Media.class)
-                    .setParameter(1, authorLastName)
-                    .setParameter(2, genre)
+                    .createQuery("select m from Media m join m.authors a on a.firstName = ?1 and a.lastName = ?2  where m.genre.keyword = ?3", Media.class)
+                    .setParameter(1, authorFirstName)
+                    .setParameter(2, authorLastName)
+                    .setParameter(3, genre)
                     .getResultList();
         }
         catch (Exception e) {
