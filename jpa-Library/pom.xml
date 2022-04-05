@@ -50,6 +50,12 @@
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>org.modelmapper</groupId>
+          <artifactId>modelmapper</artifactId>
+          <version>3.0.0</version>
+          <scope>import</scope>
+      </dependency>
   </dependencies>
   <build>
     <plugins>
