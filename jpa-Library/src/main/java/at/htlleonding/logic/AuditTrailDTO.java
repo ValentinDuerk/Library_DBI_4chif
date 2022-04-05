@@ -1,33 +1,35 @@
-package at.htlleonding.persistence;
-import javax.persistence.*;
+package at.htlleonding.logic;
+
+import at.htlleonding.persistence.Action;
 import java.time.LocalDate;
 
-@Entity
-public class AuditTrail {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(nullable = false)
+public class AuditTrailDTO {
     private String user;
 
-    @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
-    private String tableName;
+    private String table;
 
-    @Enumerated(EnumType.STRING)
     private Action action;
 
-    @Column
     private Integer contentId;
 
-    @Column
     private String oldValue;
 
-    @Column
     private String newValue;
+
+    public AuditTrailDTO(String user, LocalDate date, String table, Action action, Integer contentId, String oldValue, String newValue) {
+        this.user = user;
+        this.date = date;
+        this.table = table;
+        this.action = action;
+        this.contentId = contentId;
+        this.oldValue = oldValue;
+        this.newValue = newValue;
+    }
+
+    public AuditTrailDTO() {
+    }
 
     public String getUser() {
         return user;
@@ -45,12 +47,12 @@ public class AuditTrail {
         this.date = date;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getTable() {
+        return table;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setTable(String table) {
+        this.table = table;
     }
 
     public Action getAction() {
@@ -83,18 +85,5 @@ public class AuditTrail {
 
     public void setNewValue(String newValue) {
         this.newValue = newValue;
-    }
-
-    public AuditTrail(String user, LocalDate date, String tableName, Action action, Integer contentId, String oldValue, String newValue) {
-        this.user = user;
-        this.date = date;
-        this.tableName = tableName;
-        this.action = action;
-        this.contentId = contentId;
-        this.oldValue = oldValue;
-        this.newValue = newValue;
-    }
-
-    public AuditTrail() {
     }
 }
