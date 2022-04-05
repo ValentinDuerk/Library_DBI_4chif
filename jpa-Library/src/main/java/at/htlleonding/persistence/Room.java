@@ -11,7 +11,7 @@ public class Room {
     private Integer id;
 
     @Column
-    private Integer number;
+    private Integer roomNumber;
 
     @Column
     private Integer floor;
@@ -22,8 +22,8 @@ public class Room {
     public Room() {
     }
 
-    public Room(Integer number, Integer floor) {
-        this.number = number;
+    public Room(Integer roomNumber, Integer floor) {
+        this.roomNumber = roomNumber;
         this.floor = floor;
     }
 
@@ -31,12 +31,12 @@ public class Room {
         return id;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setNumber(Integer number) {
-        this.number = number;
+    public void setRoomNumber(Integer roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
     public Integer getFloor() {

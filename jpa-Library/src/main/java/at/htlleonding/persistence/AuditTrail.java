@@ -1,7 +1,6 @@
 package at.htlleonding.persistence;
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 public class AuditTrail {
@@ -16,7 +15,7 @@ public class AuditTrail {
     private LocalDate date;
 
     @Column(nullable = false)
-    private String table;
+    private String tableName;
 
     @Enumerated(EnumType.STRING)
     private Action action;
@@ -46,12 +45,12 @@ public class AuditTrail {
         this.date = date;
     }
 
-    public String getTable() {
-        return table;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public Action getAction() {
@@ -86,10 +85,10 @@ public class AuditTrail {
         this.newValue = newValue;
     }
 
-    public AuditTrail(String user, LocalDate date, String table, Action action, Integer contentId, String oldValue, String newValue) {
+    public AuditTrail(String user, LocalDate date, String tableName, Action action, Integer contentId, String oldValue, String newValue) {
         this.user = user;
         this.date = date;
-        this.table = table;
+        this.tableName = tableName;
         this.action = action;
         this.contentId = contentId;
         this.oldValue = oldValue;

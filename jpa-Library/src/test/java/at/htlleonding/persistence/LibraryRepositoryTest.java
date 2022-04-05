@@ -459,7 +459,7 @@ public class LibraryRepositoryTest {
 
         var room = this.target.getRoom(3,2);
         Assertions.assertNotNull(room);
-        Assertions.assertEquals(3, room.getNumber());
+        Assertions.assertEquals(3, room.getRoomNumber());
         Assertions.assertEquals(2, room.getFloor());
     }
 
@@ -483,7 +483,7 @@ public class LibraryRepositoryTest {
 
         var room = this.target.getRoom(5,2);
         Assertions.assertNotNull(room);
-        Assertions.assertEquals(5, room.getNumber());
+        Assertions.assertEquals(5, room.getRoomNumber());
         Assertions.assertEquals(2, room.getFloor());
 
         var bookShelves = this.target.getBookShelvesFromRoom(room.getId());
@@ -800,7 +800,7 @@ public class LibraryRepositoryTest {
         Assertions.assertEquals(1, auditTrails.size());
         Assertions.assertEquals("dbUser03", auditTrails.get(0).getUser());
         Assertions.assertEquals(LocalDate.of(2022,1,30), auditTrails.get(0).getDate());
-        Assertions.assertEquals("Topic", auditTrails.get(0).getTable());
+        Assertions.assertEquals("Topic", auditTrails.get(0).getTableName());
         Assertions.assertEquals(Action.Delete, auditTrails.get(0).getAction());
         Assertions.assertEquals(3, auditTrails.get(0).getContentId());
         Assertions.assertEquals("Gravitation", auditTrails.get(0).getOldValue());

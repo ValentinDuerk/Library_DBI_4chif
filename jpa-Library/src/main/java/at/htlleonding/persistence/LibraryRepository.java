@@ -596,7 +596,7 @@ public class LibraryRepository {
     public Room getRoom(int number, int floor) {
         try {
             return entityManager
-                    .createQuery("select r from Room r where r.number = ?1 and r.floor = ?2", Room.class)
+                    .createQuery("select r from Room r where r.roomNumber = ?1 and r.floor = ?2", Room.class)
                     .setParameter(1, number)
                     .setParameter(2, floor)
                     .getSingleResult();
