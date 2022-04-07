@@ -1,6 +1,7 @@
 package at.htlleonding.logic;
 
-import at.htlleonding.persistence.*;
+import at.htlleonding.persistence.Author;
+import at.htlleonding.persistence.LibraryRepository;
 import org.modelmapper.ModelMapper;
 
 import javax.enterprise.context.ApplicationScoped;

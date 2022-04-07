@@ -1,6 +1,7 @@
 package at.htlleonding.persistence;
 
-import at.htlleonding.persistence.People.*;
+import at.htlleonding.persistence.People.Customer;
+import at.htlleonding.persistence.People.Employee;
 
 import javax.persistence.*;
 import java.time.LocalDate;

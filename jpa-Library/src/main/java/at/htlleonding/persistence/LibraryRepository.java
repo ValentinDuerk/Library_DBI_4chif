@@ -5,12 +5,11 @@ import at.htlleonding.persistence.People.Customer;
 import at.htlleonding.persistence.People.Employee;
 import at.htlleonding.persistence.People.Person;
 
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.List;
 
 // @Transactional
 // https://quarkus.io/guides/transaction

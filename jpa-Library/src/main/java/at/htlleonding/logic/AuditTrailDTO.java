@@ -1,6 +1,7 @@
 package at.htlleonding.logic;
 
 import at.htlleonding.persistence.Action;
+
 import java.time.LocalDate;
 
 public class AuditTrailDTO {
