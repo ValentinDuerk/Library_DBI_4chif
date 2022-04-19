@@ -23,7 +23,7 @@ public class LendOut {
     private LocalDate lendOutDate;
 
     @Column
-    private LocalDate ReturnDate;
+    private LocalDate returnDate;
 
     @Column
     private Integer extensions;
@@ -33,7 +33,7 @@ public class LendOut {
 
     public LendOut(LocalDate lendOutDate, LocalDate returnDate) {
         this.lendOutDate = lendOutDate;
-        ReturnDate = returnDate;
+        this.returnDate = returnDate;
     }
 
     public Integer getId() {
@@ -65,11 +65,11 @@ public class LendOut {
     }
 
     public LocalDate getReturnDate() {
-        return ReturnDate;
+        return returnDate;
     }
 
     public void setReturnDate(LocalDate returnDate) {
-        ReturnDate = returnDate;
+        this.returnDate = returnDate;
     }
 
     public Integer getExtensions() {
