@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 // @Transactional
@@ -513,6 +514,26 @@ public class LibraryRepository {
                     .setParameter(2, authorLastName)
                     .setParameter(3, genre)
                     .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public Media getMediaByGenreTopicsAuthorsAndPublicationDate(int genreId, int[] topicsIds, int[] authorIds, LocalDate publicationDate) {
+        try {
+            return entityManager
+                    .createQuery("select m from Media m join " +
+                                    "m.topics t on t.id in (?1)" +
+                                    "m.authors a on a.id in (?2)" +
+                                    "where m.genre.id = ?3 and m.publicationDate = ?4", Media.class)
+                    .setParameter(1, topicsIds)
+                    .setParameter(2, authorIds)
+                    .setParameter(3, genreId)
+                    .setParameter(4, publicationDate)
+                    .getSingleResult();
         }
         catch (Exception e) {
             System.out.println(e);
