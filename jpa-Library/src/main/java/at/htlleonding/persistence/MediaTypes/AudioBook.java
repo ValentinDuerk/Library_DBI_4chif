@@ -6,6 +6,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDate;
 
+
 @Entity
 @DiscriminatorValue("AB")
 public class AudioBook extends Media {

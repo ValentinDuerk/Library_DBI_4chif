@@ -1,6 +1,7 @@
 package at.htlleonding.logic;
 
 import at.htlleonding.persistence.*;
+import com.arjuna.ats.jta.exceptions.NotImplementedException;
 import org.modelmapper.ModelMapper;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -92,4 +93,13 @@ public class LibraryLogic {
             }
         }
     }
+
+    private void addGenre(GenreDTO genreDTO) {
+        throw new NotImplementedException();
+    }
+
+    private void addTopic(TopicDTO topicDTO) {
+        throw new NotImplementedException();
+    }
+
 }

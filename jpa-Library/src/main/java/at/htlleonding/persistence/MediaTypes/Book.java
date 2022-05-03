@@ -6,10 +6,12 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.LocalDate;
 
+
 @Entity
 @DiscriminatorValue("B")
 public class Book extends Media {
     public Book() {
+        super();
     }
 
     public Book(LocalDate publicationDate) {
