@@ -7,8 +7,6 @@ import java.util.Set;
 public class SaleDTO {
     private LocalDate saleDate;
 
-    private Set<SalePositionDTO> salePositionDTOs = new HashSet<>();
-
     private EmployeeDTO employeeDTO;
 
     private CustomerDTO customerDTO;
@@ -18,10 +16,6 @@ public class SaleDTO {
 
     public SaleDTO(LocalDate saleDate) {
         this.saleDate = saleDate;
-    }
-
-    public Set<SalePositionDTO> getSalePositionDTOs() {
-        return salePositionDTOs;
     }
 
     public CustomerDTO getCustomerDTO() {

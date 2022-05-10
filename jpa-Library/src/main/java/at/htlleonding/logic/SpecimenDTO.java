@@ -11,33 +11,12 @@ public class SpecimenDTO {
 
     private PublicationDTO publicationDTO;
 
-    private SalePositionDTO salePositionDTO;
-
-    private LendOutDTO lendOutDTO;
-
     public SpecimenDTO(SpecimenState currentState, LocalDate purchase) {
         this.currentState = currentState;
         this.purchase = purchase;
     }
 
     public SpecimenDTO(){
-
-    }
-
-    public SalePositionDTO getSalePositionDTO() {
-        return salePositionDTO;
-    }
-
-    public void setSalePositionDTO(SalePositionDTO salePositionDTO) {
-        this.salePositionDTO = salePositionDTO;
-    }
-
-    public LendOutDTO getLendOutDTO() {
-        return lendOutDTO;
-    }
-
-    public void setLendOutDTO(LendOutDTO lendOutDTO) {
-        this.lendOutDTO = lendOutDTO;
     }
 
     public SpecimenState getCurrentState() {
