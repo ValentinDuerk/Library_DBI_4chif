@@ -5,14 +5,14 @@ public class PersonDTO {
 
     private String lastName;
 
-    private String eMail;
+    private String Email;
 
     private String telNumber;
 
     public PersonDTO(String firstName, String lastName, String eMail, String telNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.eMail = eMail;
+        this.Email = eMail;
         this.telNumber = telNumber;
     }
 
@@ -35,12 +35,12 @@ public class PersonDTO {
         this.lastName = lastName;
     }
 
-    public String geteMail() {
-        return eMail;
+    public String getEmail() {
+        return Email;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String email) {
+        this.Email = email;
     }
 
     public String getTelNumber() {
