@@ -1,7 +1,12 @@
 package at.htlleonding.logic;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class EmployeeDTO extends PersonDTO {
     private double salary;
+
+    private Set<SaleDTO> saleDTOs = new HashSet<>();
 
     public EmployeeDTO(String firstName, String lastName, String eMail, String telNumber, double salary) {
         super(firstName, lastName, eMail, telNumber);
@@ -9,6 +14,10 @@ public class EmployeeDTO extends PersonDTO {
     }
 
     public EmployeeDTO() {
+    }
+
+    public Set<SaleDTO> getSaleDTOs() {
+        return saleDTOs;
     }
 
     public double getSalary() {

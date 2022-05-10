@@ -9,12 +9,32 @@ public class LendOutDTO {
 
     private Integer extensions;
 
+    private SpecimenDTO specimenDTO;
+
+    private CustomerDTO customerDTO;
+
     public LendOutDTO() {
     }
 
     public LendOutDTO(LocalDate lendOutDate, LocalDate returnDate) {
         this.lendOutDate = lendOutDate;
         this.returnDate = returnDate;
+    }
+
+    public CustomerDTO getCustomerDTO() {
+        return customerDTO;
+    }
+
+    public void setCustomerDTO(CustomerDTO customerDTO) {
+        this.customerDTO = customerDTO;
+    }
+
+    public SpecimenDTO getSpecimenDTO() {
+        return specimenDTO;
+    }
+
+    public void setSpecimenDTO(SpecimenDTO specimenDTO) {
+        this.specimenDTO = specimenDTO;
     }
 
     public LocalDate getLendOutDate() {

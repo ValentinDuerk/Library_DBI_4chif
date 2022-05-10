@@ -7,12 +7,32 @@ public class ReservationDTO {
 
     private LocalDate reservationDate;
 
+    private CustomerDTO customerDTO;
+
+    private PublicationDTO publicationDTO;
+
     public ReservationDTO() {
     }
 
     public ReservationDTO(LocalDate reservationDate) {
         this.reservationDate = reservationDate;
         isStillReserved = true;
+    }
+
+    public CustomerDTO getCustomerDTO() {
+        return customerDTO;
+    }
+
+    public void setCustomerDTO(CustomerDTO customerDTO) {
+        this.customerDTO = customerDTO;
+    }
+
+    public PublicationDTO getPublicationDTO() {
+        return publicationDTO;
+    }
+
+    public void setPublicationDTO(PublicationDTO publicationDTO) {
+        this.publicationDTO = publicationDTO;
     }
 
     public boolean isStillReserved() {
