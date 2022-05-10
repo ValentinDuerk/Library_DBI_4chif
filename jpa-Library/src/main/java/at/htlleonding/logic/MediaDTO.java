@@ -21,11 +21,35 @@ public class MediaDTO {
         this.publicationDate = publicationDate;
     }
 
+    public Set<AuthorDTO> getAuthorDTOs() {
+        return authorDTOs;
+    }
+
+    public void setAuthorDTOs(Set<AuthorDTO> authorDTOs) {
+        this.authorDTOs = authorDTOs;
+    }
+
+    public Set<TopicDTO> getTopicDTOs() {
+        return topicDTOs;
+    }
+
+    public Set<String> getTopics() {
+        Set<String> topics = new HashSet<>();
+        for (var topicDTO : topicDTOs) {
+            topics.add(topicDTO.getKeyword());
+        }
+        return topics;
+    }
+
+    public void setTopicDTOs(Set<TopicDTO> topicDTOs) {
+        this.topicDTOs = topicDTOs;
+    }
+
     public GenreDTO getGenreDTO() {
         return genreDTO;
     }
 
-    public String getGenreKeyword() {
+    public String getGenre() {
         return genreDTO.getKeyword();
     }
 
