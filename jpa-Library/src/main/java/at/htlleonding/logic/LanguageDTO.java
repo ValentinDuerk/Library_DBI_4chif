@@ -1,6 +1,8 @@
 package at.htlleonding.logic;
 
 public class LanguageDTO {
+    private Integer id;
+
     private String keyword;
 
     public LanguageDTO(String keyword) {
@@ -8,6 +10,14 @@ public class LanguageDTO {
     }
 
     public LanguageDTO() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getKeyword() {

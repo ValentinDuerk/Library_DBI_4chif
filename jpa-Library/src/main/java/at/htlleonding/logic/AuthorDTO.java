@@ -3,6 +3,8 @@ package at.htlleonding.logic;
 import java.time.LocalDate;
 
 public class AuthorDTO {
+    private Integer id;
+
     private String firstName;
     private String lastName;
     private LocalDate dateBirth;
@@ -14,6 +16,14 @@ public class AuthorDTO {
     }
 
     public AuthorDTO() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {

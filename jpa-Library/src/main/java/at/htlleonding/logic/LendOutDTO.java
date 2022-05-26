@@ -3,6 +3,8 @@ package at.htlleonding.logic;
 import java.time.LocalDate;
 
 public class LendOutDTO {
+    private Integer id;
+
     private LocalDate lendOutDate;
 
     private LocalDate returnDate;
@@ -21,8 +23,30 @@ public class LendOutDTO {
         this.returnDate = returnDate;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public CustomerDTO getCustomerDTO() {
         return customerDTO;
+    }
+
+    public String getCustomerLastName() {
+        if(customerDTO != null)
+            return customerDTO.getLastName();
+        else
+            return null;
+    }
+
+    public String getCustomerFirstName() {
+        if(customerDTO != null)
+            return customerDTO.getFirstName();
+        else
+            return null;
     }
 
     public void setCustomerDTO(CustomerDTO customerDTO) {

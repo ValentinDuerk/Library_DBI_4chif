@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 // @Transactional
@@ -489,6 +490,10 @@ public class LibraryRepository {
                         .getResultList();
     }
 
+    public <T> T getEntity(Class<T> c, int id) {
+        return
+                entityManager.find(c, id);
+    }
 
     @Transactional
     public Author getAuthorByFirstNameAndLastName(String firstName, String lastName) {
@@ -521,17 +526,37 @@ public class LibraryRepository {
         }
     }
 
+//    @Transactional
+//    public Media getMediaByGenreTopicsAuthorsAndPublicationDate(int genreId, int[] topicsIds, int[] authorIds, LocalDate publicationDate) {
+//        try {
+//            return entityManager
+//                    .createQuery("select m from Media m join " +
+//                                    "m.topics t on t.id in (?1)" +
+//                                    "m.authors a on a.id in (?2)" +
+//                                    "where m.genre.id = ?3 and m.publicationDate = ?4", Media.class)
+//                    .setParameter(1, topicsIds)
+//                    .setParameter(2, authorIds)
+//                    .setParameter(3, genreId)
+//                    .setParameter(4, publicationDate)
+//                    .getSingleResult();
+//        }
+//        catch (Exception e) {
+//            System.out.println(e);
+//            return null;
+//        }
+//    }
+
     @Transactional
-    public Media getMediaByGenreTopicsAuthorsAndPublicationDate(int genreId, int[] topicsIds, int[] authorIds, LocalDate publicationDate) {
+    public Media getMediaByGenreTopicsAuthorsAndPublicationDate(String genre, List<String> topics, List<String> authors, LocalDate publicationDate) {
         try {
             return entityManager
-                    .createQuery("select m from Media m join " +
-                                    "m.topics t on t.id in (?1)" +
-                                    "m.authors a on a.id in (?2)" +
-                                    "where m.genre.id = ?3 and m.publicationDate = ?4", Media.class)
-                    .setParameter(1, topicsIds)
-                    .setParameter(2, authorIds)
-                    .setParameter(3, genreId)
+                    .createQuery("select m from Media m " +
+                            "join m.topics t on t.keyword in (?1) " +
+                            "join m.authors a on a.lastName in (?2) " +
+                            "where m.genre.keyword = ?3 and m.publicationDate = ?4", Media.class)
+                    .setParameter(1, topics)
+                    .setParameter(2, authors)
+                    .setParameter(3, genre)
                     .setParameter(4, publicationDate)
                     .getSingleResult();
         }
@@ -548,6 +573,22 @@ public class LibraryRepository {
                     .createQuery("select p from Publication p where p.title = ?1 and p.language.keyword = ?2", Publication.class)
                     .setParameter(1, title)
                     .setParameter(2, language)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public Publication getPublication(String title, String publisher, String language) {
+        try {
+            return entityManager
+                    .createQuery("select p from Publication p where p.title = ?1 and p.publisher.name = ?2 and p.language.keyword = ?3", Publication.class)
+                    .setParameter(1, title)
+                    .setParameter(2, publisher)
+                    .setParameter(3, language)
                     .getSingleResult();
         }
         catch (Exception e) {
@@ -656,6 +697,20 @@ public class LibraryRepository {
     }
 
     @Transactional
+    public Specimen getSpecimen(int specimenId) {
+        try {
+            return entityManager
+                    .createQuery("select s from Specimen s where s.id = ?1", Specimen.class)
+                    .setParameter(1, specimenId)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
     public List<AuditTrail> getAuditTrailsByUser(String user) {
         try {
             return entityManager
@@ -735,6 +790,22 @@ public class LibraryRepository {
                     .createQuery("select l from LendOut l where l.customer.id = ?1", LendOut.class)
                     .setParameter(1, customerId)
                     .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public LendOut getLendOutBySpecimenCustomerAndLendOutDate(int specimenId, int customerId, LocalDate lendOutDate) {
+        try {
+            return entityManager
+                    .createQuery("select l from LendOut l where l.specimen.id = ?1 and l.customer.id = ?2 and l.lendOutDate = ?3", LendOut.class)
+                    .setParameter(1, specimenId)
+                    .setParameter(2, customerId)
+                    .setParameter(3, lendOutDate)
+                    .getSingleResult();
         }
         catch (Exception e) {
             System.out.println(e);

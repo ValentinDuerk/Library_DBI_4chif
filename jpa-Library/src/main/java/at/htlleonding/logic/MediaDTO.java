@@ -1,14 +1,15 @@
 package at.htlleonding.logic;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MediaDTO {
+    private Integer id;
 
-    private Set<AuthorDTO> authorDTOs = new HashSet<>();
+    private List<AuthorDTO> authorDTOs = new ArrayList<>();
 
-    private Set<TopicDTO> topicDTOs = new HashSet<>();
+    private List<TopicDTO> topicDTOs = new ArrayList<>();
 
     private GenreDTO genreDTO;
 
@@ -21,27 +22,52 @@ public class MediaDTO {
         this.publicationDate = publicationDate;
     }
 
-    public Set<AuthorDTO> getAuthorDTOs() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<AuthorDTO> getAuthorDTOs() {
         return authorDTOs;
     }
 
-    public void setAuthorDTOs(Set<AuthorDTO> authorDTOs) {
+    public List<String> getAuthorLastNames() {
+        List<String> authors = new ArrayList<>();
+        for (var authorDTO : authorDTOs) {
+            authors.add(authorDTO.getLastName());
+        }
+        return authors;
+    }
+
+    public void setAuthorDTOs(List<AuthorDTO> authorDTOs) {
         this.authorDTOs = authorDTOs;
     }
 
-    public Set<TopicDTO> getTopicDTOs() {
+    public void addAuthorDTO(AuthorDTO authorDTO) {
+        authorDTOs.add(authorDTO);
+    }
+
+    public List<TopicDTO> getTopicDTOs() {
         return topicDTOs;
     }
 
-    public Set<String> getTopics() {
-        Set<String> topics = new HashSet<>();
+    public void addTopicDTO(TopicDTO topicDTO) {
+        topicDTOs.add(topicDTO);
+    }
+
+
+    public List<String> getTopics() {
+        List<String> topics = new ArrayList<>();
         for (var topicDTO : topicDTOs) {
             topics.add(topicDTO.getKeyword());
         }
         return topics;
     }
 
-    public void setTopicDTOs(Set<TopicDTO> topicDTOs) {
+    public void setTopicDTOs(List<TopicDTO> topicDTOs) {
         this.topicDTOs = topicDTOs;
     }
 

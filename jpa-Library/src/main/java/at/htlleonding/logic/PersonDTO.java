@@ -1,6 +1,8 @@
 package at.htlleonding.logic;
 
 public class PersonDTO {
+    private Integer id;
+
     private String firstName;
 
     private String lastName;
@@ -17,6 +19,14 @@ public class PersonDTO {
     }
 
     public PersonDTO() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getFirstName() {

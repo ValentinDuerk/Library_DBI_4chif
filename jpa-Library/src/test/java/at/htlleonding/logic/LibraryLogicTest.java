@@ -1,11 +1,15 @@
 package at.htlleonding.logic;
 
+import at.htlleonding.logic.MediaTypes.*;
+import at.htlleonding.persistence.*;
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.util.List;
 
 @QuarkusTest
 class LibraryLogicTest {
@@ -47,6 +51,188 @@ class LibraryLogicTest {
 //        Assertions.assertEquals("Franzes", authorDTO.getLastName());
 //    }
 
+    AuthorDTO[] authorDTOs = new AuthorDTO[] {
+            new AuthorDTO("Franz", "Franzes", LocalDate.of(1980, 01, 01)),
+            new AuthorDTO("Johann", "Johnson", LocalDate.of(1971, 3, 20)),
+            new AuthorDTO("Fritz", "Fitz", LocalDate.of(1971, 3, 20))
+    };
+
+    GenreDTO[] genreDTOs = new GenreDTO[] {
+            new GenreDTO("Sachbuch"),
+            new GenreDTO("Biographie")
+    };
+
+    TopicDTO[] topicDTOs = new TopicDTO[] {
+            new TopicDTO("Thermodynamik"),
+            new TopicDTO("Optik"),
+            new TopicDTO("Gravitation"),
+            new TopicDTO("Leben"),
+            new TopicDTO("Glaube")
+    };
+
+    MediaDTO[] mediaDTOs = new MediaDTO[] {
+            new MagazineDTO(),
+            new BookDTO(LocalDate.of(2000,1,1)),
+            new EBookDTO(),
+            new AudioBookDTO(),
+            new NewspaperDTO()
+    };
+
+    LanguageDTO[] languageDTOs = new LanguageDTO[] {
+            new LanguageDTO("Deutsch"),
+            new LanguageDTO("Englisch")
+    };
+
+    PublisherDTO[] publisherDTOs = new PublisherDTO[] {
+            new PublisherDTO("Heinz Verlag"),
+            new PublisherDTO("Meier Verlag")
+    };
+
+    PublicationDTO[] publicationDTOs = new PublicationDTO[] {
+            new PublicationDTO("Die Welt der Teilchen", false),
+            new PublicationDTO("Das Leben von Johann Johnson", false),
+            new PublicationDTO("The Life of Johann Johnson", true)
+    };
+
+    SpecimenDTO[] specimenDTOs = new SpecimenDTO[] {
+            new SpecimenDTO(),
+            new SpecimenDTO(),
+            new SpecimenDTO(),
+            new SpecimenDTO(),
+            new SpecimenDTO(),
+            new SpecimenDTO(),
+            new SpecimenDTO(),
+    };
+
+    Location[] locations = new Location[] {
+            new Location("Linz"),
+            new Location("Leonding"),
+            new Location("Enns")
+    };
+
+    PersonDTO[] personDTOs = new PersonDTO[] {
+            new EmployeeDTO("Rick", "Richard", "rick@hotmail.com", "660", 1800),
+            new CustomerDTO("Clara", "Charlotte", "clara@hotmail.com", "660", false),
+            new CustomerDTO("Elisa", "Elisabeth", "elisa@hotmail.com", "660", false),
+    };
+
+    ReservationDTO[] reservationDTOs = new ReservationDTO[] {
+            new ReservationDTO(LocalDate.of(2022, 5, 5))
+    };
+
+    LendOutDTO[] lendOutDTOs = new LendOutDTO[] {
+            new LendOutDTO(LocalDate.of(2022, 3,24), LocalDate.of(2022, 6, 1))
+    };
+
+    MediaTypeDTO[] mediaTypeDTOs = new MediaTypeDTO[] {
+            new MediaTypeDTO("Magazin", 10),
+            new MediaTypeDTO("Buch", 20),
+            new MediaTypeDTO("E-Buch", 5),
+            new MediaTypeDTO("AudioBuch", 2),
+            new MediaTypeDTO("Zeitung", 2)
+    };
+
+    SaleDTO[] saleDTOs = new SaleDTO[] {
+            new SaleDTO(LocalDate.of(2022, 3,24))
+    };
+
+    SalePositionDTO[] salePositionDTOs = new SalePositionDTO[] {
+            new SalePositionDTO(mediaTypeDTOs[0].getPrice()),
+            new SalePositionDTO(mediaTypeDTOs[0].getPrice())
+    };
+
+
+    private void createPaperBookWithOneAuthorAndMakeItRentable() {
+        mediaDTOs[1].addAuthorDTO(authorDTOs[0]);
+        mediaDTOs[1].setGenreDTO(genreDTOs[0]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[0]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[1]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[2]);
+
+        publicationDTOs[0].setMediaDTO(mediaDTOs[1]);
+        publicationDTOs[0].setPublisherDTO(publisherDTOs[0]);
+        publicationDTOs[0].setLanguageDTO(languageDTOs[0]);
+
+        specimenDTOs[0].setPublicationDTO(publicationDTOs[0]);
+        specimenDTOs[0].setPurchaseDate(LocalDate.of(2020, 01, 01));
+
+        target.addSpecimen(specimenDTOs[0]);
+        target.setSpecimenState(specimenDTOs[0].getId(), SpecimenState.MagazineStock);
+    }
+
+    private void createPaperBookWithThreeAuthorsAndMakeItRentable() {
+        mediaDTOs[1].addAuthorDTO(authorDTOs[0]);
+        mediaDTOs[1].addAuthorDTO(authorDTOs[1]);
+        mediaDTOs[1].addAuthorDTO(authorDTOs[2]);
+        mediaDTOs[1].setGenreDTO(genreDTOs[0]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[0]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[1]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[2]);
+
+        publicationDTOs[0].setMediaDTO(mediaDTOs[1]);
+        publicationDTOs[0].setPublisherDTO(publisherDTOs[0]);
+        publicationDTOs[0].setLanguageDTO(languageDTOs[0]);
+
+        specimenDTOs[0].setPublicationDTO(publicationDTOs[0]);
+        specimenDTOs[0].setPurchaseDate(LocalDate.of(2020, 01, 01));
+
+        target.addSpecimen(specimenDTOs[0]);
+        target.setSpecimenState(specimenDTOs[0].getId(), SpecimenState.MagazineStock);
+    }
+
+    private void createThreeCopiesOfPaperBookWithThreeAuthorsAndMakeItRentable() {
+        mediaDTOs[1].addAuthorDTO(authorDTOs[0]);
+        mediaDTOs[1].addAuthorDTO(authorDTOs[1]);
+        mediaDTOs[1].addAuthorDTO(authorDTOs[2]);
+        mediaDTOs[1].setGenreDTO(genreDTOs[0]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[0]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[1]);
+        mediaDTOs[1].addTopicDTO(topicDTOs[2]);
+
+        publicationDTOs[0].setMediaDTO(mediaDTOs[1]);
+        publicationDTOs[0].setPublisherDTO(publisherDTOs[0]);
+        publicationDTOs[0].setLanguageDTO(languageDTOs[0]);
+
+        specimenDTOs[0].setPublicationDTO(publicationDTOs[0]);
+        specimenDTOs[1].setPublicationDTO(publicationDTOs[0]);
+        specimenDTOs[2].setPublicationDTO(publicationDTOs[0]);
+
+        specimenDTOs[0].setPurchaseDate(LocalDate.of(2020, 01, 01));
+        specimenDTOs[1].setPurchaseDate(LocalDate.of(2020, 01, 01));
+        specimenDTOs[2].setPurchaseDate(LocalDate.of(2020, 01, 01));
+
+        target.addSpecimen(specimenDTOs[0]);
+        target.addSpecimen(specimenDTOs[1]);
+        target.addSpecimen(specimenDTOs[2]);
+        target.setSpecimenState(specimenDTOs[0].getId(), SpecimenState.MagazineStock);
+        target.setSpecimenState(specimenDTOs[1].getId(), SpecimenState.MagazineStock);
+        target.setSpecimenState(specimenDTOs[2].getId(), SpecimenState.MagazineStock);
+    }
+
+    private void createRentableItemAndLendOut() {
+//        mediaDTOs[1].addAuthorDTO(authorDTOs[0]);
+//        mediaDTOs[1].setGenreDTO(genreDTOs[0]);
+//        mediaDTOs[1].addTopicDTO(topicDTOs[0]);
+//        mediaDTOs[1].addTopicDTO(topicDTOs[1]);
+//        mediaDTOs[1].addTopicDTO(topicDTOs[2]);
+//
+//        publicationDTOs[0].setMediaDTO(mediaDTOs[1]);
+//        publicationDTOs[0].setPublisherDTO(publisherDTOs[0]);
+//        publicationDTOs[0].setLanguageDTO(languageDTOs[0]);
+//
+//        specimenDTOs[0].setPublicationDTO(publicationDTOs[0]);
+//
+//        target.addSpecimen(specimenDTOs[0]);
+//        target.SetSpecimenState(specimenDTOs[0].getId(), SpecimenState.MagazineStock);
+
+        createPaperBookWithOneAuthorAndMakeItRentable();
+
+        lendOutDTOs[0].setSpecimenDTO(specimenDTOs[0]);
+        lendOutDTOs[0].setCustomerDTO((CustomerDTO) personDTOs[1]);
+
+        target.addLendOut(lendOutDTOs[0]);
+    }
+
     /*
     Add rentable items to the library, of each media type, with multiple authors and attributes.
     Verify that these items can be rented.
@@ -55,21 +241,73 @@ class LibraryLogicTest {
     @TestTransaction
     public void addPaperBookWithOneAuthor_makeRentable_canBeRented()
     {
-        Assertions.fail("Not implemented yet");
+        createPaperBookWithOneAuthorAndMakeItRentable();
+
+        target.flushAndClear();
+
+        List<SpecimenDTO> specimenDTOs = target.getSpecimensByPublication("Die Welt der Teilchen", "Heinz Verlag", "Deutsch");
+
+        Assertions.assertEquals(1, specimenDTOs.size());
+
+        SpecimenDTO specimenDTO = specimenDTOs.get(0);
+        Assertions.assertEquals(LocalDate.of(2020, 01, 01), specimenDTO.getPurchaseDate());
+        Assertions.assertEquals("Die Welt der Teilchen", specimenDTO.getTitle());
+        Assertions.assertEquals("Deutsch", specimenDTO.getLanguage());
+        Assertions.assertEquals("Heinz Verlag", specimenDTO.getPublisher());
+        Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Franzes"));
+
+        Assertions.assertEquals(SpecimenState.MagazineStock, specimenDTO.getSpecimenState());
     }
 
     @Test
     @TestTransaction
     public void addPaperBookWithThreeAuthors_makeRentable_canBeRented()
     {
-        Assertions.fail("Not implemented yet");
+        createPaperBookWithThreeAuthorsAndMakeItRentable();
+
+        target.flushAndClear();
+
+        List<SpecimenDTO> specimenDTOs = target.getSpecimensByPublication("Die Welt der Teilchen", "Heinz Verlag", "Deutsch");
+
+        Assertions.assertEquals(1, specimenDTOs.size());
+
+        SpecimenDTO specimenDTO = specimenDTOs.get(0);
+        Assertions.assertEquals(LocalDate.of(2020, 01, 01), specimenDTO.getPurchaseDate());
+        Assertions.assertEquals("Die Welt der Teilchen", specimenDTO.getTitle());
+        Assertions.assertEquals("Deutsch", specimenDTO.getLanguage());
+        Assertions.assertEquals("Heinz Verlag", specimenDTO.getPublisher());
+        Assertions.assertEquals(3, specimenDTO.getAuthorsLastNames().size());
+        Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Franzes"));
+        Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Johnson"));
+        Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Fitz"));
+
+        Assertions.assertEquals(SpecimenState.MagazineStock, specimenDTO.getSpecimenState());
     }
 
     @Test
     @TestTransaction
     public void addThreeCopiesOfPaperBookWithThreeAuthors_makeRentable_canBeRented()
     {
-        Assertions.fail("Not implemented yet");
+        createThreeCopiesOfPaperBookWithThreeAuthorsAndMakeItRentable();
+
+        target.flushAndClear();
+
+        List<SpecimenDTO> specimenDTOs = target.getSpecimensByPublication("Die Welt der Teilchen", "Heinz Verlag", "Deutsch");
+
+        Assertions.assertEquals(3, specimenDTOs.size());
+
+        for (var specimenDTO : specimenDTOs) {
+            Assertions.assertEquals(LocalDate.of(2020, 01, 01), specimenDTO.getPurchaseDate());
+            Assertions.assertEquals("Die Welt der Teilchen", specimenDTO.getTitle());
+            Assertions.assertEquals("Deutsch", specimenDTO.getLanguage());
+            Assertions.assertEquals("Heinz Verlag", specimenDTO.getPublisher());
+            Assertions.assertEquals(3, specimenDTO.getAuthorsLastNames().size());
+            Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Franzes"));
+            Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Johnson"));
+            Assertions.assertTrue(specimenDTO.getAuthorsLastNames().contains("Fitz"));
+
+            Assertions.assertEquals(SpecimenState.MagazineStock, specimenDTO.getSpecimenState());
+        }
     }
 
     @Test
@@ -151,7 +389,18 @@ class LibraryLogicTest {
     @TestTransaction
     public void customerRentsRentableItem_ItemIsRented()
     {
-        Assertions.fail("Not implemented yet");
+        createRentableItemAndLendOut();
+
+        target.flushAndClear();
+
+        LendOutDTO lendOutDTO = target.getLendOut(specimenDTOs[0].getId(), "Clara", "Charlotte", LocalDate.of(2022, 3,24));
+
+        Assertions.assertNotNull(lendOutDTO);
+        Assertions.assertEquals(LocalDate.of(2022, 3,24), lendOutDTO.getLendOutDate());
+        Assertions.assertEquals(LocalDate.of(2022, 6, 1), lendOutDTO.getReturnDate());
+        Assertions.assertEquals(1, lendOutDTO.getExtensions());
+        Assertions.assertEquals("Clara", lendOutDTO.getCustomerFirstName());
+        Assertions.assertEquals("Charlotte", lendOutDTO.getCustomerLastName());
     }
 
     @Test

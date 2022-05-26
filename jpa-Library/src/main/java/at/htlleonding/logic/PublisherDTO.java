@@ -1,6 +1,8 @@
 package at.htlleonding.logic;
 
 public class PublisherDTO {
+    private Integer id;
+
     private String name;
 
     public PublisherDTO(String name) {
@@ -8,6 +10,14 @@ public class PublisherDTO {
     }
 
     public PublisherDTO() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {

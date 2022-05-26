@@ -1,6 +1,7 @@
 package at.htlleonding.logic;
 
 public class PublicationDTO {
+    private Integer id;
 
     private String title;
 
@@ -19,6 +20,14 @@ public class PublicationDTO {
     public PublicationDTO(String title, boolean isTranslation) {
         this.title = title;
         this.isTranslation = isTranslation;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -42,7 +51,10 @@ public class PublicationDTO {
     }
 
     public String getPublisher() {
-        return publisherDTO.getName();
+        if(publisherDTO != null)
+            return publisherDTO.getName();
+        else
+            return null;
     }
 
     public void setPublisherDTO(PublisherDTO publisherDTO) {
@@ -54,7 +66,10 @@ public class PublicationDTO {
     }
 
     public String getLanguage() {
-        return languageDTO.getKeyword();
+        if(languageDTO != null)
+            return languageDTO.getKeyword();
+        else
+            return null;
     }
 
     public void setLanguageDTO(LanguageDTO languageDTO) {
