@@ -26,6 +26,9 @@ public class LendOut {
     private LocalDate returnDate;
 
     @Column
+    private boolean stillLendOut;
+
+    @Column
     private Integer extensions;
 
     public LendOut() {
@@ -34,6 +37,10 @@ public class LendOut {
     public LendOut(LocalDate lendOutDate, LocalDate returnDate) {
         this.lendOutDate = lendOutDate;
         this.returnDate = returnDate;
+    }
+
+    public LendOut(LocalDate lendOutDate) {
+        this.lendOutDate = lendOutDate;
     }
 
     public Integer getId() {
@@ -78,5 +85,13 @@ public class LendOut {
 
     public void setExtensions(Integer extensions) {
         this.extensions = extensions;
+    }
+
+    public boolean isStillLendOut() {
+        return stillLendOut;
+    }
+
+    public void setStillLendOut(boolean stillLendOut) {
+        this.stillLendOut = stillLendOut;
     }
 }

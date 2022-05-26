@@ -15,12 +15,18 @@ public class LendOutDTO {
 
     private CustomerDTO customerDTO;
 
+    private boolean stillLendOut;
+
     public LendOutDTO() {
     }
 
     public LendOutDTO(LocalDate lendOutDate, LocalDate returnDate) {
         this.lendOutDate = lendOutDate;
         this.returnDate = returnDate;
+    }
+
+    public LendOutDTO(LocalDate lendOutDate) {
+        this.lendOutDate = lendOutDate;
     }
 
     public Integer getId() {
@@ -83,6 +89,14 @@ public class LendOutDTO {
 
     public void setExtensions(Integer extensions) {
         this.extensions = extensions;
+    }
+
+    public boolean isStillLendOut() {
+        return stillLendOut;
+    }
+
+    public void setStillLendOut(boolean stillLendOut) {
+        this.stillLendOut = stillLendOut;
     }
 }
 

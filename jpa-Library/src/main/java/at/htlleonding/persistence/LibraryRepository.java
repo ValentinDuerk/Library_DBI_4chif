@@ -526,26 +526,6 @@ public class LibraryRepository {
         }
     }
 
-//    @Transactional
-//    public Media getMediaByGenreTopicsAuthorsAndPublicationDate(int genreId, int[] topicsIds, int[] authorIds, LocalDate publicationDate) {
-//        try {
-//            return entityManager
-//                    .createQuery("select m from Media m join " +
-//                                    "m.topics t on t.id in (?1)" +
-//                                    "m.authors a on a.id in (?2)" +
-//                                    "where m.genre.id = ?3 and m.publicationDate = ?4", Media.class)
-//                    .setParameter(1, topicsIds)
-//                    .setParameter(2, authorIds)
-//                    .setParameter(3, genreId)
-//                    .setParameter(4, publicationDate)
-//                    .getSingleResult();
-//        }
-//        catch (Exception e) {
-//            System.out.println(e);
-//            return null;
-//        }
-//    }
-
     @Transactional
     public Media getMediaByGenreTopicsAuthorsAndPublicationDate(String genre, List<String> topics, List<String> authors, LocalDate publicationDate) {
         try {
@@ -784,6 +764,36 @@ public class LibraryRepository {
     }
 
     @Transactional
+    public Reservation getReservationOfPublicationByCustomer(int publicationId, int customerId) {
+        try {
+            return entityManager
+                    .createQuery("select r from Reservation r where r.publication.id = ?1 and r.customer.id = ?2", Reservation.class)
+                    .setParameter(1, publicationId)
+                    .setParameter(2, customerId)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public boolean isLendOutActiveOfSpecimen(int specimenId) {
+        try {
+            return entityManager
+                    .createQuery("select l from LendOut l where l.specimen.id = ?1 and l.returnDate > ?2 and l.stillLendOut is true", LendOut.class)
+                    .setParameter(1, specimenId)
+                    .setParameter(2, LocalDate.now())
+                    .getSingleResult() != null;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Transactional
     public List<LendOut> getLendOutsByCustomer(int customerId) {
         try {
             return entityManager
@@ -848,6 +858,34 @@ public class LibraryRepository {
                     .createQuery("select s from SalePosition s where s.sale.id = ?1", SalePosition.class)
                     .setParameter(1, saleId)
                     .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public List<SalePosition> getSalePositionsByCustomer(int customerId) {
+        try {
+            return entityManager
+                    .createQuery("select sp from SalePosition sp join sp.sale sa on sa.customer.id = ?1", SalePosition.class)
+                    .setParameter(1, customerId)
+                    .getResultList();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public SalePosition getSalePositionsBySpecimen(int specimenId) {
+        try {
+            return entityManager
+                    .createQuery("select s from SalePosition s where s.specimen.id = ?1", SalePosition.class)
+                    .setParameter(1, specimenId)
+                    .getSingleResult();
         }
         catch (Exception e) {
             System.out.println(e);

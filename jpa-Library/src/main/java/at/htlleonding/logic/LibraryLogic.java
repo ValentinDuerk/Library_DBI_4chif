@@ -1,6 +1,8 @@
 package at.htlleonding.logic;
 
+import at.htlleonding.logic.MediaTypes.*;
 import at.htlleonding.persistence.*;
+import at.htlleonding.persistence.MediaTypes.*;
 import at.htlleonding.persistence.People.Customer;
 import at.htlleonding.persistence.People.Employee;
 import org.modelmapper.ModelMapper;
@@ -219,7 +221,18 @@ public class LibraryLogic {
                 topicKeywords, authorLastNames, mediaDTO.getPublicationDate());
 
         if(media == null) {
-            media = new Media(mediaDTO.getPublicationDate());
+            if(mediaDTO instanceof BookDTO)
+                media = new Book(mediaDTO.getPublicationDate());
+            else if(mediaDTO instanceof AudioBookDTO)
+                media = new AudioBook(mediaDTO.getPublicationDate());
+            else if(mediaDTO instanceof EBookDTO)
+                media = new EBook(mediaDTO.getPublicationDate());
+            else if(mediaDTO instanceof MagazineDTO)
+                media = new Magazine(mediaDTO.getPublicationDate());
+            else if(mediaDTO instanceof NewspaperDTO)
+                media = new Newspaper(mediaDTO.getPublicationDate());
+            else if(mediaDTO instanceof ReferenceBookDTO)
+                media = new ReferenceBook(mediaDTO.getPublicationDate());
 
             libraryRepository.add(media);
             mediaDTO.setId(media.getId());
@@ -239,11 +252,24 @@ public class LibraryLogic {
 
     @Transactional
     public MediaDTO getMedia(int mediaId) {
-        MediaDTO mediaDTO;
+        MediaDTO mediaDTO = new MediaDTO();
         Media media = libraryRepository.getEntity(Media.class, mediaId);
 
         if(media != null) {
-            mediaDTO = new MediaDTO(media.getPublicationDate());
+
+            if(media instanceof Book)
+                mediaDTO = new BookDTO(media.getPublicationDate());
+            else if(media instanceof AudioBook)
+                mediaDTO = new AudioBookDTO(media.getPublicationDate());
+            else if(media instanceof EBook)
+                mediaDTO = new EBookDTO(media.getPublicationDate());
+            else if(media instanceof Magazine)
+                mediaDTO = new MagazineDTO(media.getPublicationDate());
+            else if(media instanceof Newspaper)
+                mediaDTO = new NewspaperDTO(media.getPublicationDate());
+            else if(media instanceof ReferenceBook)
+                mediaDTO = new ReferenceBookDTO(media.getPublicationDate());
+
             mediaDTO.setId(media.getId());
 
             if(media.getAuthors().size() > 0) {
@@ -278,9 +304,6 @@ public class LibraryLogic {
         if(mediaDTO != null) {
             addMedia(mediaDTO);
             media = libraryRepository.getEntity(Media.class, mediaDTO.getId());
-//        media = libraryRepository.getMediaByGenreTopicsAuthorsAndPublicationDate(mediaDTO.getGenre(),
-//                    mediaDTO.getTopics(), mediaDTO.getAuthorLastNames(),
-//                    mediaDTO.getPublicationDate());
         }
         else {
             media = new Media();
@@ -291,7 +314,6 @@ public class LibraryLogic {
         if(publisherDTO != null) {
             addPublisher(publisherDTO);
             publisher = libraryRepository.getEntity(Publisher.class, publisherDTO.getId());
-//            publisher = libraryRepository.getPublisher(publisherDTO.getName());
         }
         else {
             publisher = new Publisher();
@@ -302,7 +324,6 @@ public class LibraryLogic {
         if(languageDTO != null) {
             addLanguage(languageDTO);
             language = libraryRepository.getEntity(Language.class, languageDTO.getId());
-//            language = libraryRepository.getLanguage(languageDTO.getKeyword());
         }
         else {
             language = new Language();
@@ -358,9 +379,6 @@ public class LibraryLogic {
         if(publicationDTO != null) {
             addPublication(publicationDTO);
             publication = libraryRepository.getEntity(Publication.class, publicationDTO.getId());
-//            publication = libraryRepository.getPublication(publicationDTO.getTitle(),
-//                    publicationDTO.getPublisher(),
-//                    publicationDTO.getLanguage());
         }
 
         if(publication != null) {
@@ -435,7 +453,7 @@ public class LibraryLogic {
 
 
     @Transactional
-    public void addLendOut(LendOutDTO lendOutDTO) {
+    public boolean addLendOut(LendOutDTO lendOutDTO) {
         SpecimenDTO specimenDTO = lendOutDTO.getSpecimenDTO();
         Specimen specimen;
         if(specimenDTO != null) {
@@ -449,33 +467,72 @@ public class LibraryLogic {
         if(customerDTO != null) {
             addCustomer(customerDTO);
             customer = libraryRepository.getEntity(Customer.class, customerDTO.getId());
-//            customer = libraryRepository.getCustomerByFirstNameAndLastName(customerDTO.getFirstName(), customerDTO.getLastName());
         }
         else {
             customer = new Customer();
         }
 
-        if(specimen.getId() != 0 && specimen.getSpecimenState() == SpecimenState.MagazineStock && customer.getId() != 0) {
+        boolean result = true;
+
+        if(specimen.getId() != 0 && specimen.getSpecimenState() == SpecimenState.MagazineStock
+                && customer.getId() != 0) {
+
             LendOut lendOut = libraryRepository.getLendOutBySpecimenCustomerAndLendOutDate(specimen.getId(), customer.getId(), lendOutDTO.getLendOutDate());
 
-            if(lendOut == null) {
-                lendOut = new LendOut(lendOutDTO.getLendOutDate(), lendOutDTO.getReturnDate());
-                lendOut.setExtensions(1);
+            if(lendOut == null && !libraryRepository.isLendOutActiveOfSpecimen(specimen.getId())) {
+                lendOut = new LendOut(lendOutDTO.getLendOutDate(), lendOutDTO.getLendOutDate().plusDays(14));
+                lendOut.setExtensions(0);
+                lendOut.setStillLendOut(true);
 
                 libraryRepository.add(lendOut);
                 lendOutDTO.setId(lendOut.getId());
+                lendOutDTO.setReturnDate(lendOut.getReturnDate());
 
                 libraryRepository.add(specimen, lendOut);
                 libraryRepository.add(lendOut, customer);
             } else if(lendOut != null) {
                 var ext = lendOut.getExtensions();
 
-                if(ext < 3) {
-                    lendOut.setReturnDate(lendOutDTO.getReturnDate());
+                if(ext+1 < 3) {
                     lendOut.setExtensions(ext + 1);
-                    libraryRepository.add(lendOut);
+                    lendOut.setReturnDate(lendOut.getLendOutDate().plusDays(14L * (lendOut.getExtensions()+1)));
+                    lendOut.setStillLendOut(true);
+
+                    lendOutDTO.setReturnDate(lendOut.getReturnDate());
                 }
+                else {
+                    lendOut.setStillLendOut(false);
+                    result = false;
+                }
+                libraryRepository.add(lendOut);
+
+                lendOutDTO.setStillLendOut(lendOut.isStillLendOut());
             }
+            else
+                result = false;
+        }
+        else
+            result = false;
+
+        return result;
+    }
+
+    @Transactional
+    public void addLendOutFromEmployee(int employeeId, LendOutDTO lendOutDTO) {
+        Employee employee = libraryRepository.getEntity(Employee.class, employeeId);
+
+        if(employee != null) {
+            LendOut lendOut = libraryRepository.getEntity(LendOut.class, lendOutDTO.getId());
+
+            var ext = lendOut.getExtensions();
+            lendOut.setExtensions(ext + 1);
+            lendOut.setReturnDate(lendOut.getLendOutDate().plusDays(14L * (lendOut.getExtensions()+1)));
+            lendOut.setStillLendOut(true);
+
+            libraryRepository.add(lendOut);
+
+            lendOutDTO.setReturnDate(lendOut.getReturnDate());
+            lendOutDTO.setStillLendOut(lendOut.isStillLendOut());
         }
     }
 
@@ -498,6 +555,221 @@ public class LibraryLogic {
         return lendOutDTO;
     }
 
+    @Transactional
+    public List<LendOutDTO> getCurrentLendOutsOfCustomer(String customerFirstName, String customerLastName) {
+        List<LendOutDTO> lendOutDTOs = new ArrayList<>();
+
+        Customer customer = libraryRepository.getCustomerByFirstNameAndLastName(customerFirstName, customerLastName);
+
+        if(customer != null) {
+            List<LendOut> lendOuts = libraryRepository.getLendOutsByCustomer(customer.getId());
+
+            if(lendOuts.size() > 0) {
+                for (var lendOut : lendOuts ) {
+                    if(lendOut.isStillLendOut()) {
+                        LendOutDTO lendOutDTO = new LendOutDTO();
+                        mapper.map(lendOut, lendOutDTO);
+
+                        lendOutDTO.setCustomerDTO(getCustomer(customer.getId()));
+
+                        if(lendOut.getSpecimen() != null)
+                            lendOutDTO.setSpecimenDTO(getSpecimen(lendOut.getSpecimen().getId()));
+
+                        lendOutDTOs.add(lendOutDTO);
+                    }
+                }
+            }
+        }
+
+        return lendOutDTOs;
+    }
+
+    @Transactional
+    public List<LendOutDTO> getLendOutsOfCustomer(String customerFirstName, String customerLastName) {
+        List<LendOutDTO> lendOutDTOs = new ArrayList<>();
+
+        Customer customer = libraryRepository.getCustomerByFirstNameAndLastName(customerFirstName, customerLastName);
+
+        if(customer != null) {
+            List<LendOut> lendOuts = libraryRepository.getLendOutsByCustomer(customer.getId());
+
+            if(lendOuts.size() > 0) {
+                for (var lendOut : lendOuts ) {
+                    LendOutDTO lendOutDTO = new LendOutDTO();
+                    mapper.map(lendOut, lendOutDTO);
+
+                    lendOutDTO.setCustomerDTO(getCustomer(customer.getId()));
+
+                    if(lendOut.getSpecimen() != null)
+                        lendOutDTO.setSpecimenDTO(getSpecimen(lendOut.getSpecimen().getId()));
+
+                    lendOutDTOs.add(lendOutDTO);
+                }
+            }
+        }
+
+        return lendOutDTOs;
+    }
+
+    @Transactional
+    public boolean cancelLendOut(int lendOutId) {
+        LendOut lendOut = libraryRepository.getEntity(LendOut.class ,lendOutId);
+        boolean result = false;
+
+        if(lendOut != null) {
+            lendOut.setStillLendOut(false);
+            libraryRepository.add(lendOut);
+
+            result = true;
+        }
+        return result;
+    }
+
+    @Transactional
+    public void addSale(SaleDTO saleDTO) {
+        EmployeeDTO employeeDTO = saleDTO.getEmployeeDTO();
+        Employee employee;
+        if(employeeDTO != null) {
+            addEmployee(employeeDTO);
+            employee = libraryRepository.getEntity(Employee.class, employeeDTO.getId());
+        }
+        else {
+            employee = new Employee();
+        }
+
+        CustomerDTO customerDTO = saleDTO.getCustomerDTO();
+        Customer customer;
+        if(customerDTO != null) {
+            addCustomer(customerDTO);
+            customer = libraryRepository.getEntity(Customer.class, customerDTO.getId());
+        }
+        else {
+            customer = new Customer();
+        }
+
+        if(employee.getId() != 0 && customer.getId() != 0) {
+            Sale sale = new Sale(saleDTO.getSaleDate());
+
+            libraryRepository.add(sale, employee);
+            libraryRepository.add(sale, customer);
+
+            saleDTO.setId(sale.getId());
+        }
+    }
+
+    @Transactional
+    public SaleDTO getSale(int saleId) {
+        SaleDTO saleDTO;
+        Sale sale = libraryRepository.getEntity(Sale.class, saleId);
+
+        if(sale != null) {
+            saleDTO = new SaleDTO(sale.getSaleDate());
+            saleDTO.setId(sale.getId());
+
+            if(sale.getCustomer() != null)
+                saleDTO.setCustomerDTO(getCustomer(sale.getCustomer().getId()));
+
+            if(sale.getEmployee() != null)
+                saleDTO.setEmployeeDTO(getEmployee(sale.getEmployee().getId()));
+        }
+        else
+            saleDTO = null;
+
+        return saleDTO;
+    }
+
+    @Transactional
+    public void addSalePosition(SalePositionDTO salePositionDTO) {
+        SpecimenDTO specimenDTO = salePositionDTO.getSpecimenDTO();
+        Specimen specimen = null;
+        if(specimenDTO != null)
+            specimen = libraryRepository.getEntity(Specimen.class, specimenDTO.getId());
+        else
+            specimen = new Specimen();
+
+        SaleDTO saleDTO = salePositionDTO.getSaleDTO();
+        Sale sale = null;
+        if(saleDTO != null)
+            sale = libraryRepository.getEntity(Sale.class, saleDTO.getId());
+        else
+            sale = new Sale();
+
+        SalePosition salePosition = libraryRepository.getSalePositionsBySpecimen(specimen.getId());
+
+        if(salePosition == null && specimen.getId() != 0 && specimen.getSpecimenState() == SpecimenState.SoldStock && sale.getId() != 0) {
+            salePosition = new SalePosition(salePositionDTO.getPrize());
+
+            libraryRepository.add(specimen, salePosition);
+            libraryRepository.add(sale, salePosition);
+
+            salePositionDTO.setId(salePosition.getId());
+        }
+    }
+
+    @Transactional
+    public List<SalePositionDTO> getSalePositionsOfCustomer(String customerFirstName, String customerLastName) {
+        List<SalePositionDTO> salePositionDTOs = new ArrayList<>();
+
+        Customer customer = libraryRepository.getCustomerByFirstNameAndLastName(customerFirstName, customerLastName);
+
+        if(customer != null) {
+            List<SalePosition> salePositions = libraryRepository.getSalePositionsByCustomer(customer.getId());
+
+            if(salePositions.size() > 0) {
+                for (var salePosition : salePositions ) {
+                    SalePositionDTO salePositionDTO = new SalePositionDTO();
+                    mapper.map(salePosition, salePositionDTO);
+
+                    if(salePosition.getSale() != null)
+                        salePositionDTO.setSaleDTO(getSale(salePosition.getSale().getId()));
+
+                    if(salePosition.getSpecimen() != null)
+                        salePositionDTO.setSpecimenDTO(getSpecimen(salePosition.getSpecimen().getId()));
+
+                    salePositionDTOs.add(salePositionDTO);
+                }
+            }
+        }
+
+        return salePositionDTOs;
+    }
+
+    public void addReservation(ReservationDTO reservationDTO) {
+        PublicationDTO publicationDTO = reservationDTO.getPublicationDTO();
+        Publication publication = null;
+        Specimen specimen;
+        if(publicationDTO != null) {
+            addPublication(publicationDTO);
+            publication = libraryRepository.getEntity(Publication.class, publicationDTO.getId());
+        } else {
+            publication = new Publication();
+        }
+
+        CustomerDTO customerDTO = reservationDTO.getCustomerDTO();
+        Customer customer;
+        if(customerDTO != null) {
+            addCustomer(customerDTO);
+            customer = libraryRepository.getEntity(Customer.class, customerDTO.getId());
+        }
+        else {
+            customer = new Customer();
+        }
+
+        Reservation reservation = libraryRepository.getReservationOfPublicationByCustomer(publication.getId(), customer.getId());
+
+        if(reservation == null)
+        {
+            mapper.map(reservationDTO, reservation);
+
+            if(customer.getId() != 0)
+                libraryRepository.add(reservation, customer);
+
+            if(publication.getId() != 0)
+                libraryRepository.add(publication, reservation);
+
+            libraryRepository.add(reservation);
+        }
+    }
 
     @Transactional
     public void addCustomer(CustomerDTO customerDTO) {
