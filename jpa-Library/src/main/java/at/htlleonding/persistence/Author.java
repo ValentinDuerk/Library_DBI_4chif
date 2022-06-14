@@ -20,6 +20,9 @@ public class Author {
     @Column(nullable = false)
     private LocalDate dateBirth;
 
+    @Column(nullable = true)
+    private LocalDate dateDeath;
+
     @ManyToMany
     private Set<Media> media = new HashSet<>();
 
@@ -37,6 +40,13 @@ public class Author {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateBirth = dob;
+    }
+
+    public Author(String firstName, String lastName, LocalDate dob, LocalDate dod) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateBirth = dob;
+        this.dateDeath = dod;
     }
 
     public Set<Media> getMedia() {
@@ -61,6 +71,14 @@ public class Author {
 
     public void setDateBirth(LocalDate dateBirth) {
         this.dateBirth = dateBirth;
+    }
+
+    public LocalDate getDateDeath() {
+        return dateDeath;
+    }
+
+    public void setDateDeath(LocalDate dateDeath) {
+        this.dateDeath = dateDeath;
     }
 
     public String getFullName() {

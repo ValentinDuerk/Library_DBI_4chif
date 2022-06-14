@@ -779,6 +779,55 @@ public class LibraryRepository {
     }
 
     @Transactional
+    public Reservation getReservationOfPublicationByCustomerOnReservationDate(int publicationId, int customerId, LocalDate reservationDate) {
+        try {
+            return entityManager
+                    .createQuery("select r from Reservation r where r.publication.id = ?1 and r.customer.id = ?2 and r.reservationDate = ?3", Reservation.class)
+                    .setParameter(1, publicationId)
+                    .setParameter(2, customerId)
+                    .setParameter(3, reservationDate)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    @Transactional
+    public boolean isReservedByCustomer(int customerId, int publicationId) {
+        try {
+            return entityManager
+                    .createQuery("select r from Reservation r where r.customer.id = ?1 and r.publication.id = ?2 and r.reservationDate > ?3 and r.isStillReserved is true", Reservation.class)
+                    .setParameter(1, customerId)
+                    .setParameter(2, publicationId)
+                    .setParameter(3, LocalDate.now())
+                    .getSingleResult() != null;
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Transactional
+    public boolean areSpecimensOfPublicationCompletelyReservedOut(int publicationId) {
+        try {
+            return entityManager
+                    .createQuery("select size(s) <= size(r) from Publication p " +
+                                    "join p.reservations r on r.isStillReserved is true " +
+                                    "join p.specimen s " +
+                                    "where p.id = ?1", Boolean.class)
+                    .setParameter(1, publicationId)
+                    .getSingleResult();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Transactional
     public boolean isLendOutActiveOfSpecimen(int specimenId) {
         try {
             return entityManager

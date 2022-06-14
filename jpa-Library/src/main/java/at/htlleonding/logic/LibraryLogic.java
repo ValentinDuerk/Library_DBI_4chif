@@ -1,10 +1,16 @@
 package at.htlleonding.logic;
 
 import at.htlleonding.logic.MediaTypes.*;
+import at.htlleonding.logic.xmlDTOs.WorksOfAuthorsDTO;
 import at.htlleonding.persistence.*;
 import at.htlleonding.persistence.MediaTypes.*;
 import at.htlleonding.persistence.People.Customer;
 import at.htlleonding.persistence.People.Employee;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.modelmapper.ModelMapper;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -103,6 +109,19 @@ public class LibraryLogic {
     }
 
     @Transactional
+    public List<GenreDTO> getAllGenres() {
+        List<Genre> genres = libraryRepository.getAllGenres();
+        List<GenreDTO> genreDTOs = new ArrayList<>();
+
+        for (var genre : genres) {
+            GenreDTO genreDTO = new GenreDTO();
+            mapper.map(genre, genreDTO);
+            genreDTOs.add(genreDTO);
+        }
+        return genreDTOs;
+    }
+
+    @Transactional
     public void addTopic(TopicDTO topicDTO) {
         Topic topic = libraryRepository.getTopic(topicDTO.getKeyword());
         if(topic == null) {
@@ -148,6 +167,19 @@ public class LibraryLogic {
             publisherDTO = null;
 
         return publisherDTO;
+    }
+
+    @Transactional
+    public List<PublisherDTO> getAllPublishers() {
+        List<Publisher> publishers = libraryRepository.getAllPublisher();
+        List<PublisherDTO> publisherDTOs = new ArrayList<>();
+
+        for (var publisher : publishers) {
+            PublisherDTO publisherDTO = new PublisherDTO();
+            mapper.map(publisher, publisherDTO);
+            publisherDTOs.add(publisherDTO);
+        }
+        return publisherDTOs;
     }
 
     @Transactional
@@ -373,6 +405,19 @@ public class LibraryLogic {
     }
 
     @Transactional
+    public List<PublicationDTO> getAllPublications() {
+        List<Publication> publications = libraryRepository.getAllPublications();
+        List<PublicationDTO> publicationDTOs = new ArrayList<>();
+
+        for (var publication : publications) {
+            PublicationDTO publicationDTO = getPublication(publication.getId());
+            mapper.map(publication, publicationDTO);
+            publicationDTOs.add(publicationDTO);
+        }
+        return publicationDTOs;
+    }
+
+    @Transactional
     public void addSpecimen(SpecimenDTO specimenDTO) {
         PublicationDTO publicationDTO = specimenDTO.getPublicationDTO();
         Publication publication = null;
@@ -479,7 +524,15 @@ public class LibraryLogic {
 
             LendOut lendOut = libraryRepository.getLendOutBySpecimenCustomerAndLendOutDate(specimen.getId(), customer.getId(), lendOutDTO.getLendOutDate());
 
-            if(lendOut == null && !libraryRepository.isLendOutActiveOfSpecimen(specimen.getId())) {
+            if(lendOut == null && !libraryRepository.isLendOutActiveOfSpecimen(specimen.getId())
+                && (!libraryRepository.areSpecimensOfPublicationCompletelyReservedOut(specimen.getPublication().getId())
+                    || libraryRepository.isReservedByCustomer(customer.getId(), specimen.getPublication().getId()))) {
+
+                if(libraryRepository.isReservedByCustomer(customer.getId(), specimen.getPublication().getId())) {
+                    Reservation reservation = libraryRepository.getReservationOfPublicationByCustomer(specimen.getPublication().getId(), customer.getId());
+                    reservation.setStillReserved(false);
+                    libraryRepository.add(reservation);
+                }
                 lendOut = new LendOut(lendOutDTO.getLendOutDate(), lendOutDTO.getLendOutDate().plusDays(14));
                 lendOut.setExtensions(0);
                 lendOut.setStillLendOut(true);
@@ -522,17 +575,69 @@ public class LibraryLogic {
         Employee employee = libraryRepository.getEntity(Employee.class, employeeId);
 
         if(employee != null) {
-            LendOut lendOut = libraryRepository.getEntity(LendOut.class, lendOutDTO.getId());
 
-            var ext = lendOut.getExtensions();
-            lendOut.setExtensions(ext + 1);
-            lendOut.setReturnDate(lendOut.getLendOutDate().plusDays(14L * (lendOut.getExtensions()+1)));
-            lendOut.setStillLendOut(true);
+            SpecimenDTO specimenDTO = lendOutDTO.getSpecimenDTO();
+            Specimen specimen;
+            if(specimenDTO != null) {
+                specimen = libraryRepository.getSpecimen(specimenDTO.getId());
+            } else {
+                specimen = new Specimen();
+            }
 
-            libraryRepository.add(lendOut);
+            CustomerDTO customerDTO = lendOutDTO.getCustomerDTO();
+            Customer customer;
+            if(customerDTO != null) {
+                addCustomer(customerDTO);
+                customer = libraryRepository.getEntity(Customer.class, customerDTO.getId());
+            }
+            else {
+                customer = new Customer();
+            }
 
-            lendOutDTO.setReturnDate(lendOut.getReturnDate());
-            lendOutDTO.setStillLendOut(lendOut.isStillLendOut());
+            boolean result = true;
+
+            if(specimen.getId() != 0 && specimen.getSpecimenState() == SpecimenState.MagazineStock
+                    && customer.getId() != 0) {
+
+                LendOut lendOut = libraryRepository.getLendOutBySpecimenCustomerAndLendOutDate(specimen.getId(), customer.getId(), lendOutDTO.getLendOutDate());
+
+                if(lendOut == null && !libraryRepository.isLendOutActiveOfSpecimen(specimen.getId())) {
+                    lendOut = new LendOut(lendOutDTO.getLendOutDate(), lendOutDTO.getLendOutDate().plusDays(14));
+                    lendOut.setExtensions(0);
+                    lendOut.setStillLendOut(true);
+
+                    libraryRepository.add(lendOut);
+                    lendOutDTO.setId(lendOut.getId());
+                    lendOutDTO.setReturnDate(lendOut.getReturnDate());
+
+                    libraryRepository.add(specimen, lendOut);
+                    libraryRepository.add(lendOut, customer);
+                } else if(lendOut != null) {
+                    var ext = lendOut.getExtensions();
+
+                    lendOut.setExtensions(ext + 1);
+                    lendOut.setReturnDate(lendOut.getLendOutDate().plusDays(14L * (lendOut.getExtensions()+1)));
+                    lendOut.setStillLendOut(true);
+
+                    lendOutDTO.setReturnDate(lendOut.getReturnDate());
+
+                    libraryRepository.add(lendOut);
+
+                    lendOutDTO.setStillLendOut(lendOut.isStillLendOut());
+                }
+            }
+
+//            LendOut lendOut = libraryRepository.getEntity(LendOut.class, lendOutDTO.getId());
+
+//            var ext = lendOut.getExtensions();
+//            lendOut.setExtensions(ext + 1);
+//            lendOut.setReturnDate(lendOut.getLendOutDate().plusDays(14L * (lendOut.getExtensions()+1)));
+//            lendOut.setStillLendOut(true);
+//
+//            libraryRepository.add(lendOut);
+//
+//            lendOutDTO.setReturnDate(lendOut.getReturnDate());
+//            lendOutDTO.setStillLendOut(lendOut.isStillLendOut());
         }
     }
 
@@ -759,6 +864,9 @@ public class LibraryLogic {
 
         if(reservation == null)
         {
+            reservation = new Reservation();
+            reservation.setStillReserved(true);
+
             mapper.map(reservationDTO, reservation);
 
             if(customer.getId() != 0)
@@ -769,6 +877,42 @@ public class LibraryLogic {
 
             libraryRepository.add(reservation);
         }
+    }
+
+    @Transactional
+    public ReservationDTO getReservation(String title, String language, String customerFirstName, String customerLastName, LocalDate reservationDate) {
+        ReservationDTO reservationDTO = null;
+
+        Customer customer = libraryRepository.getCustomerByFirstNameAndLastName(customerFirstName, customerLastName);
+
+        Publication publication = libraryRepository.getPublication(title, language);
+
+        if(customer != null && publication != null) {
+            Reservation reservation = libraryRepository.getReservationOfPublicationByCustomerOnReservationDate(publication.getId(), customer.getId(), reservationDate);
+
+            if(reservation != null) {
+                reservationDTO = new ReservationDTO();
+                mapper.map(reservation, reservationDTO);
+                reservationDTO.setCustomerDTO(getCustomer(customer.getId()));
+                reservationDTO.setPublicationDTO(getPublication(publication.getId()));
+            }
+        }
+
+        return reservationDTO;
+    }
+
+    @Transactional
+    public boolean cancelReservation(int reservationId) {
+        Reservation reservation = libraryRepository.getEntity(Reservation.class ,reservationId);
+        boolean result = false;
+
+        if(reservation != null) {
+            reservation.setStillReserved(false);
+            libraryRepository.add(reservation);
+
+            result = true;
+        }
+        return result;
     }
 
     @Transactional
@@ -870,5 +1014,18 @@ public class LibraryLogic {
             employeeDTO = null;
 
         return employeeDTO;
+    }
+
+    public String convertToXml(WorksOfAuthorsDTO worksOfAuthorDTO) {
+        ObjectMapper xmlMapper = new XmlMapper();
+        xmlMapper.registerModule(new JavaTimeModule());
+        xmlMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        try {
+            return xmlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(worksOfAuthorDTO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

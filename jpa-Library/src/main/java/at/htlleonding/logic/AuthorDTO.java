@@ -8,11 +8,19 @@ public class AuthorDTO {
     private String firstName;
     private String lastName;
     private LocalDate dateBirth;
+    private LocalDate dateDeath;
 
     public AuthorDTO(String firstName, String lastName, LocalDate dateBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateBirth = dateBirth;
+    }
+
+    public AuthorDTO(String firstName, String lastName, LocalDate dateBirth, LocalDate dateDeath) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateBirth = dateBirth;
+        this.dateDeath = dateDeath;
     }
 
     public AuthorDTO() {
@@ -50,4 +58,11 @@ public class AuthorDTO {
         this.dateBirth = dateBirth;
     }
 
+    public LocalDate getDateDeath() {
+        return dateDeath;
+    }
+
+    public void setDateDeath(LocalDate dateDeath) {
+        this.dateDeath = dateDeath;
+    }
 }

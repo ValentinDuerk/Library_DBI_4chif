@@ -512,6 +512,16 @@ class LibraryLogicTest {
         target.addSalePosition(salePositionDTOs[1]);
     }
 
+    private void createRentableItemAndMakeReservationOnThePublicationOfItem() {
+        createRentableItemAndLendOut();
+
+        reservationDTOs[0] = new ReservationDTO(LocalDate.now());
+        reservationDTOs[0].setPublicationDTO(publicationDTOs[0]);
+        reservationDTOs[0].setCustomerDTO((CustomerDTO) personDTOs[1]);
+
+        target.addReservation(reservationDTOs[0]);
+    }
+
     /*
     Add rentable items to the library, of each media type, with multiple authors and attributes.
     Verify that these items can be rented.
@@ -868,7 +878,27 @@ class LibraryLogicTest {
     @TestTransaction
     public void rentOutItemToCustomerA_customerBmakesReservation_CustomerAreturnsItem_RentPossibleOnlyForCustomerB()
     {
-        Assertions.fail("Not implemented yet");
+        createRentableItemAndMakeReservationOnThePublicationOfItem();
+
+        target.cancelLendOut(lendOutDTOs[0].getId());
+
+        lendOutDTOs[1] = new LendOutDTO(LocalDate.now());
+
+        lendOutDTOs[1].setSpecimenDTO(specimenDTOs[0]);
+        lendOutDTOs[1].setCustomerDTO((CustomerDTO) personDTOs[2]);
+
+        boolean isLendOut = target.addLendOut(lendOutDTOs[1]);
+
+        Assertions.assertFalse(isLendOut);
+
+        lendOutDTOs[2] = new LendOutDTO(LocalDate.now());
+
+        lendOutDTOs[2].setSpecimenDTO(specimenDTOs[0]);
+        lendOutDTOs[2].setCustomerDTO((CustomerDTO) personDTOs[1]);
+
+        isLendOut = target.addLendOut(lendOutDTOs[2]);
+
+        Assertions.assertTrue(isLendOut);
     }
 
     @Test
