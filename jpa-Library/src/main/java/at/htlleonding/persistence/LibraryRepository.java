@@ -50,6 +50,11 @@ public class LibraryRepository {
         }
     }
 
+    public <T> T getEntity(Class<T> c, int id) {
+        return
+                entityManager.find(c, id);
+    }
+
     @Transactional
     public void add(Media m, Genre g) {
         if(m.getId() == null) {
@@ -488,11 +493,6 @@ public class LibraryRepository {
                 entityManager
                         .createQuery("select m from MediaType m", MediaType.class)
                         .getResultList();
-    }
-
-    public <T> T getEntity(Class<T> c, int id) {
-        return
-                entityManager.find(c, id);
     }
 
     @Transactional
